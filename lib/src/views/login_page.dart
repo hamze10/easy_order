@@ -59,11 +59,6 @@ class _LoginPageState extends State<LoginPage> {
                     r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                 .hasMatch(value))
               return 'Veuillez entrer une adresse email valide';
-          } else {
-            if (value.length < 8)
-              return 'Votre mot de passe doit contenir 8 caractères minimum.';
-            if (!value.contains(RegExp(r'\d')))
-              return 'Votre mot de passe doit contenir au moins un chiffre.';
           }
           return null;
         },
