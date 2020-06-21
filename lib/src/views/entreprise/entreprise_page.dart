@@ -11,7 +11,8 @@ class EntreprisePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Entreprises'),
+        backgroundColor: Colors.red[400],
+        title: Text('Mes Entreprises'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app),

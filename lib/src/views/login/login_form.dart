@@ -166,16 +166,16 @@ class _LoginFormState extends State<LoginForm> {
                                   color: Colors.white,
                                 ),
                                 errorStyle: TextStyle(
-                                  color: Colors.red[300],
+                                  color: Colors.red[900],
                                 ),
                                 focusedErrorBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Colors.red[300],
+                                    color: Colors.red[900],
                                   ),
                                 ),
                                 errorBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Colors.red[300],
+                                    color: Colors.red[900],
                                   ),
                                 ),
                                 suffixIcon: Icon(
@@ -208,16 +208,16 @@ class _LoginFormState extends State<LoginForm> {
                                   color: Colors.white,
                                 ),
                                 errorStyle: TextStyle(
-                                  color: Colors.red[300],
+                                  color: Colors.red[900],
                                 ),
                                 focusedErrorBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Colors.red[300],
+                                    color: Colors.red[900],
                                   ),
                                 ),
                                 errorBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Colors.red[300],
+                                    color: Colors.red[900],
                                   ),
                                 ),
                                 suffixIcon: Icon(
@@ -225,7 +225,7 @@ class _LoginFormState extends State<LoginForm> {
                                   color: Colors.white,
                                 ),
                               ),
-                              keyboardType: TextInputType.emailAddress,
+                              keyboardType: TextInputType.visiblePassword,
                               autovalidate: true,
                               autocorrect: false,
                               validator: (_) {

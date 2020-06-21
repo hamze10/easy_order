@@ -48,7 +48,7 @@ class LoginScreen extends StatelessWidget {
               ),
               size: Size(double.infinity, double.infinity),
               waveAmplitude: 25,
-              backgroundColor: Colors.red[50],
+              backgroundColor: Colors.red[100],
             ),
             LoginForm(
               userRepository: _userRepository,
