@@ -34,7 +34,7 @@ class _ManageEntrepriseScreen extends State<ManageEntrepriseScreen> {
         type: FileType.image,
       );
     } on PlatformException catch (e) {
-      print("Cannot open file explorer : $e");
+      print('ERROR _openFileExplorer : $e');
     }
   }
 

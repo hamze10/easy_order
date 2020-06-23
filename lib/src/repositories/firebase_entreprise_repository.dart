@@ -14,21 +14,10 @@ class FirebaseEntrepriseRepository implements EntrepriseRepository {
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
 
   Future<String> uploadAndGetImageForStorage(String img) async {
-    String image = img
-        .substring(img.lastIndexOf("/"), img.lastIndexOf("."))
-        .replaceAll("/", "");
-    final Directory dir = Directory.systemTemp;
-    final byteData = await rootBundle.load(img);
-    String imageWithExtension = img.substring(img.indexOf(image), img.length);
-    File file = File('${dir.path}/$imageWithExtension');
-    await file.writeAsBytes(byteData.buffer.asUint8List(
-      byteData.offsetInBytes,
-      byteData.lengthInBytes,
-    ));
     StorageTaskSnapshot snapshot = await _firebaseStorage
         .ref()
-        .child("entreprises/$image")
-        .putFile(file)
+        .child("entreprises/$img")
+        .putFile(File(img))
         .onComplete;
     if (snapshot.error == null) {
       return await snapshot.ref.getDownloadURL();
