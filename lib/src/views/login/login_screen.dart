@@ -26,19 +26,19 @@ class LoginScreen extends StatelessWidget {
               config: CustomConfig(
                 gradients: [
                   [
-                    Colors.red[600],
-                    Colors.red[400],
-                    Colors.red[300],
+                    Colors.teal[800],
+                    Colors.teal[600],
+                    Colors.teal[400],
                   ],
                   [
-                    Colors.red[600],
-                    Colors.red[400],
-                    Colors.red[200],
+                    Colors.teal[800],
+                    Colors.teal[600],
+                    Colors.teal[300],
                   ],
                   [
-                    Colors.red[600],
-                    Colors.red[400],
-                    Colors.red[100],
+                    Colors.teal[800],
+                    Colors.teal[600],
+                    Colors.teal[200],
                   ],
                 ],
                 durations: [19440, 10800, 6000],
@@ -48,7 +48,7 @@ class LoginScreen extends StatelessWidget {
               ),
               size: Size(double.infinity, double.infinity),
               waveAmplitude: 25,
-              backgroundColor: Colors.red[100],
+              backgroundColor: Colors.teal[50],
             ),
             LoginForm(
               userRepository: _userRepository,

@@ -2,15 +2,20 @@ import 'package:easy_order/src/blocs/authentication_bloc/authentication_bloc.dar
 import 'package:easy_order/src/models/entreprise.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+
+typedef OnDeleteCallback = Function(Entreprise entreprise);
 
 class EntrepriseList extends StatefulWidget {
   final List<Entreprise> _entreprise;
   final String _displayName;
+  final OnDeleteCallback onDelete;
 
   EntrepriseList(
       {Key key,
       @required List<Entreprise> entreprise,
-      @required String displayName})
+      @required String displayName,
+      @required this.onDelete})
       : assert(entreprise != null && displayName != null),
         _entreprise = entreprise,
         _displayName = displayName,
@@ -27,7 +32,7 @@ class _EntrepriseListState extends State<EntrepriseList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[400],
+        backgroundColor: Colors.teal[400],
         title: Text('Mes Entreprises'),
         actions: <Widget>[
           IconButton(
@@ -45,7 +50,7 @@ class _EntrepriseListState extends State<EntrepriseList> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.red[400],
+                color: Colors.teal[400],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -58,7 +63,7 @@ class _EntrepriseListState extends State<EntrepriseList> {
                     ),
                   ),
                   CircleAvatar(
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.grey[300],
                     radius: 40.0,
                   ),
                 ],
@@ -85,21 +90,63 @@ class _EntrepriseListState extends State<EntrepriseList> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
-                onLongPress: () {
-                  Navigator.pushNamed(context, '/manageEntreprise',
-                      arguments: _entreprises[i]);
-                },
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30.0,
-                    backgroundImage: _entreprises[i].picture != ""
-                        ? NetworkImage(_entreprises[i].picture)
-                        : null,
-                    backgroundColor: Colors.grey[300],
+                child: Slidable(
+                  actionPane: SlidableStrechActionPane(),
+                  actionExtentRatio: 0.25,
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      radius: 30.0,
+                      backgroundImage: _entreprises[i].picture != ""
+                          ? NetworkImage(_entreprises[i].picture)
+                          : null,
+                      backgroundColor: Colors.grey[300],
+                    ),
+                    title: Text(_entreprises[i].name),
+                    subtitle: Text(
+                        _entreprises[i].email + " · " + _entreprises[i].tel),
                   ),
-                  title: Text(_entreprises[i].name),
-                  subtitle:
-                      Text(_entreprises[i].email + " · " + _entreprises[i].tel),
+                  secondaryActions: <Widget>[
+                    IconSlideAction(
+                      caption: 'Modifier',
+                      color: Colors.grey[300],
+                      icon: Icons.edit,
+                      onTap: () {
+                        Navigator.pushNamed(context, '/manageEntreprise',
+                            arguments: _entreprises[i]);
+                      },
+                    ),
+                    IconSlideAction(
+                      caption: 'Supprimer',
+                      color: Colors.red[500],
+                      icon: Icons.delete,
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Suppression"),
+                                content: Text(
+                                    "Voulez-vous vraiment supprimer cette entreprise ? "),
+                                actions: [
+                                  FlatButton(
+                                    child: Text("Non"),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                  FlatButton(
+                                    child: Text("Oui"),
+                                    onPressed: () {
+                                      widget.onDelete(_entreprises[i]);
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              );
+                            });
+                      },
+                    ),
+                  ],
                 ),
               ),
             );
@@ -110,7 +157,7 @@ class _EntrepriseListState extends State<EntrepriseList> {
         onPressed: () {
           Navigator.pushNamed(context, '/manageEntreprise', arguments: null);
         },
-        backgroundColor: Colors.red[400],
+        backgroundColor: Colors.teal[400],
         child: Icon(Icons.add),
       ),
     );

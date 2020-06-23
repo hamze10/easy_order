@@ -20,8 +20,8 @@ class EntreprisePage extends StatelessWidget {
             color: Colors.white,
             child: Center(
               child: CircularProgressIndicator(
-                backgroundColor: Colors.red,
-                valueColor: AlwaysStoppedAnimation(Colors.red[100]),
+                backgroundColor: Colors.teal,
+                valueColor: AlwaysStoppedAnimation(Colors.teal[100]),
               ),
             ),
           );
@@ -36,6 +36,10 @@ class EntreprisePage extends StatelessWidget {
           return EntrepriseList(
             entreprise: state.entreprises,
             displayName: _displayName,
+            onDelete: (entreprise) {
+              BlocProvider.of<EntreprisesBloc>(context)
+                  .add(DeleteEntreprise(entreprise));
+            },
           );
         } else {
           return Container();
