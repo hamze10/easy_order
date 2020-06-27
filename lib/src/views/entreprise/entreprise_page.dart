@@ -36,10 +36,6 @@ class EntreprisePage extends StatelessWidget {
           return EntrepriseList(
             entreprise: state.entreprises,
             displayName: _displayName,
-            onDelete: (entreprise) {
-              BlocProvider.of<EntreprisesBloc>(context)
-                  .add(DeleteEntreprise(entreprise));
-            },
           );
         } else {
           return Container();

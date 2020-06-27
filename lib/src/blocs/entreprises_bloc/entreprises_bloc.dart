@@ -25,12 +25,6 @@ class EntreprisesBloc extends Bloc<EntreprisesEvent, EntreprisesState> {
   ) async* {
     if (event is LoadEntreprises) {
       yield* _mapLoadEntreprisesToState();
-    } else if (event is AddEntreprise) {
-      yield* _mapAddEntrepriseToState(event);
-    } else if (event is UpdateEntreprise) {
-      yield* _mapUpdateEntrepriseToState(event);
-    } else if (event is DeleteEntreprise) {
-      yield* _mapDeleteEntrepriseToState(event);
     } else if (event is EntrepriseUpdated) {
       yield* _mapEntreprisesUpdateToState(event);
     }
@@ -41,21 +35,6 @@ class EntreprisesBloc extends Bloc<EntreprisesEvent, EntreprisesState> {
     _entrepriseSubscription = _entrepriseRepository
         .entreprises()
         .listen((entreprise) => add(EntrepriseUpdated(entreprise)));
-  }
-
-  Stream<EntreprisesState> _mapAddEntrepriseToState(
-      AddEntreprise event) async* {
-    _entrepriseRepository.addNewEntreprise(event.entreprise);
-  }
-
-  Stream<EntreprisesState> _mapUpdateEntrepriseToState(
-      UpdateEntreprise event) async* {
-    _entrepriseRepository.updateEntreprise(event.entreprise);
-  }
-
-  Stream<EntreprisesState> _mapDeleteEntrepriseToState(
-      DeleteEntreprise event) async* {
-    _entrepriseRepository.deleteNewEntreprise(event.entreprise);
   }
 
   Stream<EntreprisesState> _mapEntreprisesUpdateToState(

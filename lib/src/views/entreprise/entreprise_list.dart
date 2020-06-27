@@ -4,19 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-typedef OnDeleteCallback = Function(Entreprise entreprise);
-
 class EntrepriseList extends StatefulWidget {
   final List<Entreprise> _entreprise;
   final String _displayName;
-  final OnDeleteCallback onDelete;
 
-  EntrepriseList(
-      {Key key,
-      @required List<Entreprise> entreprise,
-      @required String displayName,
-      @required this.onDelete})
-      : assert(entreprise != null && displayName != null),
+  EntrepriseList({
+    Key key,
+    @required List<Entreprise> entreprise,
+    @required String displayName,
+  })  : assert(entreprise != null && displayName != null),
         _entreprise = entreprise,
         _displayName = displayName,
         super(key: key);
@@ -27,6 +23,7 @@ class EntrepriseList extends StatefulWidget {
 
 class _EntrepriseListState extends State<EntrepriseList> {
   List<Entreprise> get _entreprises => widget._entreprise;
+  final SlidableController _slidableController = SlidableController();
 
   @override
   Widget build(BuildContext context) {
@@ -91,14 +88,17 @@ class _EntrepriseListState extends State<EntrepriseList> {
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 child: Slidable(
-                  actionPane: SlidableStrechActionPane(),
+                  actionPane: SlidableScrollActionPane(),
                   actionExtentRatio: 0.25,
+                  key: Key(_entreprises[i].id),
+                  controller: _slidableController,
                   child: ListTile(
                     leading: CircleAvatar(
                       radius: 30.0,
-                      backgroundImage: _entreprises[i].picture != ""
-                          ? NetworkImage(_entreprises[i].picture)
-                          : null,
+                      backgroundImage:
+                          !_entreprises[i].picture.startsWith("images/")
+                              ? NetworkImage(_entreprises[i].picture)
+                              : AssetImage(_entreprises[i].picture),
                       backgroundColor: Colors.grey[300],
                     ),
                     title: Text(_entreprises[i].name),
@@ -108,42 +108,11 @@ class _EntrepriseListState extends State<EntrepriseList> {
                   secondaryActions: <Widget>[
                     IconSlideAction(
                       caption: 'Modifier',
-                      color: Colors.grey[300],
+                      color: Colors.grey[200],
                       icon: Icons.edit,
                       onTap: () {
                         Navigator.pushNamed(context, '/manageEntreprise',
                             arguments: _entreprises[i]);
-                      },
-                    ),
-                    IconSlideAction(
-                      caption: 'Supprimer',
-                      color: Colors.red[500],
-                      icon: Icons.delete,
-                      onTap: () {
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                title: Text("Suppression"),
-                                content: Text(
-                                    "Voulez-vous vraiment supprimer cette entreprise ? "),
-                                actions: [
-                                  FlatButton(
-                                    child: Text("Non"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                  FlatButton(
-                                    child: Text("Oui"),
-                                    onPressed: () {
-                                      widget.onDelete(_entreprises[i]);
-                                      Navigator.pop(context);
-                                    },
-                                  ),
-                                ],
-                              );
-                            });
                       },
                     ),
                   ],

@@ -35,6 +35,7 @@ void main() {
       ],
       child: App(
         userRepository: userRepository,
+        entrepriseRepository: firebaseEntrepriseRepository,
       ),
     ),
   );
@@ -42,12 +43,15 @@ void main() {
 
 class App extends StatelessWidget {
   final UserRepository _userRepository;
+  final FirebaseEntrepriseRepository _entrepriseRepository;
 
   App({
     Key key,
     @required UserRepository userRepository,
-  })  : assert(userRepository != null),
+    @required FirebaseEntrepriseRepository entrepriseRepository,
+  })  : assert(userRepository != null && entrepriseRepository != null),
         _userRepository = userRepository,
+        _entrepriseRepository = entrepriseRepository,
         super(key: key);
 
   @override
@@ -56,19 +60,7 @@ class App extends StatelessWidget {
       routes: {
         '/manageEntreprise': (context) {
           return ManageEntrepriseScreen(
-            onSave: (entreprise, editing) {
-              if (editing) {
-                BlocProvider.of<EntreprisesBloc>(context)
-                    .add(UpdateEntreprise(entreprise));
-              } else {
-                BlocProvider.of<EntreprisesBloc>(context)
-                    .add(AddEntreprise(entreprise));
-              }
-            },
-            onDelete: (entreprise) {
-              BlocProvider.of<EntreprisesBloc>(context)
-                  .add(DeleteEntreprise(entreprise));
-            },
+            entrepriseRepository: _entrepriseRepository,
           );
         },
       },

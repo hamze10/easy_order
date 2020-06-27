@@ -6,7 +6,6 @@ import 'package:easy_order/src/models/entreprise.dart';
 import 'package:easy_order/src/repositories/entreprise_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/services.dart';
 
 class FirebaseEntrepriseRepository implements EntrepriseRepository {
   final entrepriseCollection = Firestore.instance.collection('entreprises');
@@ -30,7 +29,8 @@ class FirebaseEntrepriseRepository implements EntrepriseRepository {
   Future<void> addNewEntreprise(Entreprise entreprise) async {
     String _userID = (await _firebaseAuth.currentUser()).uid;
     Entreprise withOwner = entreprise.copyWith(owners: [_userID]);
-    if (!entreprise.picture.startsWith("http")) {
+    if (!entreprise.picture.startsWith("http") &&
+        !entreprise.picture.startsWith("images/")) {
       final String dlURL =
           await uploadAndGetImageForStorage(entreprise.picture);
       if (dlURL != null) {
@@ -63,7 +63,8 @@ class FirebaseEntrepriseRepository implements EntrepriseRepository {
   Future<void> updateEntreprise(Entreprise entreprise) async {
     String _userID = (await _firebaseAuth.currentUser()).uid;
     Entreprise withOwner = entreprise.copyWith(owners: [_userID]);
-    if (!entreprise.picture.startsWith("http")) {
+    if (!entreprise.picture.startsWith("http") &&
+        !entreprise.picture.startsWith("images/")) {
       final String dlURL =
           await uploadAndGetImageForStorage(entreprise.picture);
       if (dlURL != null) {

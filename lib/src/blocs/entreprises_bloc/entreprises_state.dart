@@ -5,6 +5,7 @@ abstract class EntreprisesState {
   const EntreprisesState();
 
   @override
+  // ignore: override_on_non_overriding_member
   List<Object> get props => [];
 }
 
