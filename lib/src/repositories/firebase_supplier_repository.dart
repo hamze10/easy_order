@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_order/src/entities/entreprise_entity.dart';
 import 'package:easy_order/src/entities/supplier.entity.dart';
 import 'package:easy_order/src/models/entreprise.dart';
 import 'package:easy_order/src/models/supplier.dart';
@@ -36,27 +37,38 @@ class FirebaseSupplierRepository implements SupplierRepository {
         withPicture = supplier.copyWith(picture: dlURL);
       }
     }
-    return supplierCollection
+    return await supplierCollection
         .add(withPicture.toEntity().toDocument())
-        .then((value) {
-      List<Supplier> supp = List<Supplier>.from(entreprise.suppliers)
-        ..add(supplier.copyWith(id: value.documentID));
-      Entreprise ent = entreprise.copyWith(suppliers: supp);
-      entrepriseCollection
+        .then((value) async {
+      await entrepriseCollection
           .document(entreprise.id)
-          .updateData(ent.toEntity().toDocument());
+          .get()
+          .then((snapshot) async {
+        Entreprise ent =
+            Entreprise.fromEntity(EntrepriseEntity.fromSnapshot(snapshot));
+        Supplier toAdd = supplier.copyWith(id: value.documentID);
+        List<Supplier> supp = List<Supplier>.from(ent.suppliers)..add(toAdd);
+        ent = ent.copyWith(suppliers: supp);
+        await entrepriseCollection
+            .document(entreprise.id)
+            .updateData(ent.toEntity().toDocument());
+      });
     });
   }
 
   @override
   Future<void> deleteSupplier(Supplier supplier, Entreprise entreprise) {
     return supplierCollection.document(supplier.id).delete().then((value) {
-      List<Supplier> supp = List<Supplier>.from(entreprise.suppliers)
-        ..remove(supplier);
-      Entreprise ent = entreprise.copyWith(suppliers: supp);
-      entrepriseCollection
-          .document(entreprise.id)
-          .updateData(ent.toEntity().toDocument());
+      entrepriseCollection.document(entreprise.id).get().then((snapshot) {
+        Entreprise ent =
+            Entreprise.fromEntity(EntrepriseEntity.fromSnapshot(snapshot));
+        List<Supplier> supp = List<Supplier>.from(ent.suppliers)
+          ..removeWhere((e) => e.id == supplier.id);
+        ent = ent.copyWith(suppliers: supp);
+        entrepriseCollection
+            .document(entreprise.id)
+            .updateData(ent.toEntity().toDocument());
+      });
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:easy_order/src/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:easy_order/src/models/entreprise.dart';
+import 'package:easy_order/src/models/supplierArguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -88,8 +89,14 @@ class _EntrepriseListState extends State<EntrepriseList> {
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushNamed(context, '/suppliers',
-                      arguments: _entreprises[i].suppliers);
+                  Navigator.pushNamed(
+                    context,
+                    '/suppliers',
+                    arguments: SupplierArguments(
+                      _entreprises[i].suppliers,
+                      _entreprises[i],
+                    ),
+                  );
                 },
                 child: Slidable(
                   actionPane: SlidableScrollActionPane(),

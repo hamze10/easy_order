@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:easy_order/src/models/entreprise.dart';
 import 'package:easy_order/src/models/supplier.dart';
 import 'package:easy_order/src/repositories/firebase_supplier_repository.dart';
 import 'package:equatable/equatable.dart';
@@ -36,12 +37,13 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
     _supplierSubscription?.cancel();
     _supplierSubscription = _supplierRepository
         .suppliers(event.suppliers)
-        .listen((supplier) => add(SuppliersUpdated(supplier)));
+        .listen(
+            (supplier) => add(SuppliersUpdated(supplier, event.entreprise)));
   }
 
   Stream<SuppliersState> _mapSuppliersUpdateToState(
       SuppliersUpdated event) async* {
-    yield SuppliersLoadSuccess(event.suppliers);
+    yield SuppliersLoadSuccess(event.suppliers, event.entreprise);
   }
 
   @override

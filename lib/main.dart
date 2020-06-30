@@ -9,6 +9,7 @@ import 'package:easy_order/src/views/entreprise/manage_entreprise_screen.dart';
 import 'package:easy_order/src/views/login/login_screen.dart';
 import 'package:easy_order/src/views/splash_screen.dart';
 import 'package:easy_order/src/repositories/repositories.dart';
+import 'package:easy_order/src/views/suppliers/manage_supplier_screen.dart';
 import 'package:easy_order/src/views/suppliers/supplier_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -47,6 +48,7 @@ void main() {
       child: App(
         userRepository: userRepository,
         entrepriseRepository: firebaseEntrepriseRepository,
+        supplierRepository: firebaseSupplierRepository,
       ),
     ),
   );
@@ -55,14 +57,19 @@ void main() {
 class App extends StatelessWidget {
   final UserRepository _userRepository;
   final FirebaseEntrepriseRepository _entrepriseRepository;
+  final FirebaseSupplierRepository _supplierRepository;
 
   App({
     Key key,
     @required UserRepository userRepository,
     @required FirebaseEntrepriseRepository entrepriseRepository,
-  })  : assert(userRepository != null && entrepriseRepository != null),
+    @required FirebaseSupplierRepository supplierRepository,
+  })  : assert(userRepository != null &&
+            entrepriseRepository != null &&
+            supplierRepository != null),
         _userRepository = userRepository,
         _entrepriseRepository = entrepriseRepository,
+        _supplierRepository = supplierRepository,
         super(key: key);
 
   @override
@@ -76,6 +83,11 @@ class App extends StatelessWidget {
         },
         '/suppliers': (context) {
           return SupplierScreen();
+        },
+        '/manageSupplier': (context) {
+          return ManageSupplierScreen(
+            supplierRepository: _supplierRepository,
+          );
         }
       },
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(

@@ -1,32 +1,33 @@
-import 'package:easy_order/src/blocs/manage_entreprise_bloc/manage_entreprise_bloc.dart';
-import 'package:easy_order/src/models/entreprise.dart';
-import 'package:easy_order/src/repositories/firebase_entreprise_repository.dart';
+import 'package:easy_order/src/blocs/manage_supplier_bloc/manage_supplier_bloc.dart';
+import 'package:easy_order/src/models/manageSupplierArguments.dart';
+import 'package:easy_order/src/models/supplier.dart';
+import 'package:easy_order/src/repositories/firebase_supplier_repository.dart';
 import 'package:easy_order/src/utils/validators.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ManageEntrepriseForm extends StatefulWidget {
-  final FirebaseEntrepriseRepository _entrepriseRepository;
-  final Entreprise _entreprise;
+class ManageSupplierForm extends StatefulWidget {
+  final FirebaseSupplierRepository _supplierRepository;
+  final ManageSupplierArguments _manageSupplierArguments;
 
-  ManageEntrepriseForm(
-      {Key key,
-      @required FirebaseEntrepriseRepository entrepriseRepository,
-      @required Entreprise entreprise})
-      : assert(entrepriseRepository != null),
-        _entrepriseRepository = entrepriseRepository,
-        _entreprise = entreprise,
+  ManageSupplierForm({
+    Key key,
+    @required FirebaseSupplierRepository supplierRepository,
+    @required ManageSupplierArguments manageSupplierArguments,
+  })  : assert(supplierRepository != null && manageSupplierArguments != null),
+        _supplierRepository = supplierRepository,
+        _manageSupplierArguments = manageSupplierArguments,
         super(key: key);
 
   @override
-  _ManageEntrepriseFormState createState() => _ManageEntrepriseFormState();
+  _ManageSupplierFormState createState() => _ManageSupplierFormState();
 }
 
-class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
+class _ManageSupplierFormState extends State<ManageSupplierForm> {
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  ManageEntrepriseBloc _manageEntrepriseBloc;
+  ManageSupplierBloc _manageSupplierBloc;
 
   String _name;
   String _email;
@@ -34,9 +35,9 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
   String _picture;
   String _pathPicture;
 
-  FirebaseEntrepriseRepository get _entrepriseRepository =>
-      widget._entrepriseRepository;
-  Entreprise get editingEnt => widget._entreprise;
+  FirebaseSupplierRepository get _supplierRepository =>
+      widget._supplierRepository;
+  ManageSupplierArguments get editingSupp => widget._manageSupplierArguments;
 
   void _openFileExplorer() async {
     try {
@@ -52,24 +53,24 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
   @override
   void initState() {
     super.initState();
-    _manageEntrepriseBloc = BlocProvider.of<ManageEntrepriseBloc>(context);
+    _manageSupplierBloc = BlocProvider.of<ManageSupplierBloc>(context);
   }
 
-  void _onAddEntreprise(Entreprise ent) {
-    _manageEntrepriseBloc.add(
-      AddEntreprise(ent),
+  void _onAddSupplier(ManageSupplierArguments msa) {
+    _manageSupplierBloc.add(
+      AddSupplier(msa.supplier, msa.entreprise),
     );
   }
 
-  void _onUpdateEntreprise(Entreprise ent) {
-    _manageEntrepriseBloc.add(
-      UpdateEntreprise(ent),
+  void _onUpdateSupplier(ManageSupplierArguments msa) {
+    _manageSupplierBloc.add(
+      UpdateSupplier(msa.supplier),
     );
   }
 
-  void _onDeleteEntreprise(Entreprise ent) {
-    _manageEntrepriseBloc.add(
-      DeleteEntreprise(ent),
+  void _onDeleteSupplier(ManageSupplierArguments msa) {
+    _manageSupplierBloc.add(
+      DeleteSupplier(msa.supplier, msa.entreprise),
     );
   }
 
@@ -81,7 +82,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
   @override
   Widget build(BuildContext context) {
     List<Widget> actions = [];
-    if (editingEnt != null) {
+    if (editingSupp.supplier != null) {
       actions.add(
         IconButton(
           icon: Icon(
@@ -95,7 +96,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                   return AlertDialog(
                     title: Text("Suppression"),
                     content: Text(
-                        "Voulez-vous vraiment supprimer cette entreprise ? "),
+                        "Voulez-vous vraiment supprimer ce fournisseur ? "),
                     actions: [
                       FlatButton(
                         child: Text("Non"),
@@ -113,7 +114,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                   );
                 }).then((value) {
               if (value == true) {
-                _onDeleteEntreprise(editingEnt);
+                _onDeleteSupplier(editingSupp);
               }
             });
           },
@@ -125,12 +126,12 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
         backgroundColor: Colors.teal[400],
         actions: actions,
         title: Text(
-          editingEnt != null
-              ? 'Modifier une entreprise'
-              : 'Ajouter une entreprise',
+          editingSupp.supplier != null
+              ? 'Modifier un fournisseur'
+              : 'Ajouter un fournisseur',
         ),
       ),
-      body: BlocListener<ManageEntrepriseBloc, ManageEntrepriseState>(
+      body: BlocListener<ManageSupplierBloc, ManageSupplierState>(
         listener: (context, state) {
           if (state.isFailure) {
             Scaffold.of(context)
@@ -183,7 +184,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
             Navigator.pop(context);
           }
         },
-        child: BlocBuilder<ManageEntrepriseBloc, ManageEntrepriseState>(
+        child: BlocBuilder<ManageSupplierBloc, ManageSupplierState>(
           builder: (context, state) {
             return SafeArea(
               child: Padding(
@@ -197,8 +198,9 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16.0, vertical: 8.0),
                           child: TextFormField(
-                            initialValue:
-                                editingEnt != null ? editingEnt.name : '',
+                            initialValue: editingSupp.supplier != null
+                                ? editingSupp.supplier.name
+                                : '',
                             decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
@@ -222,8 +224,9 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16.0, vertical: 8.0),
                           child: TextFormField(
-                            initialValue:
-                                editingEnt != null ? editingEnt.email : '',
+                            initialValue: editingSupp.supplier != null
+                                ? editingSupp.supplier.email
+                                : '',
                             decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
@@ -248,8 +251,9 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                           padding: const EdgeInsets.symmetric(
                               horizontal: 16.0, vertical: 8.0),
                           child: TextFormField(
-                            initialValue:
-                                editingEnt != null ? editingEnt.tel : '',
+                            initialValue: editingSupp.supplier != null
+                                ? editingSupp.supplier.tel
+                                : '',
                             decoration: InputDecoration(
                               enabledBorder: UnderlineInputBorder(
                                 borderSide: BorderSide(
@@ -276,8 +280,8 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                           child: Column(
                             children: <Widget>[
                               TextFormField(
-                                initialValue: editingEnt != null
-                                    ? editingEnt.picture
+                                initialValue: editingSupp.supplier != null
+                                    ? editingSupp.supplier.picture
                                     : '',
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
@@ -293,7 +297,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                                   suffixIcon: Icon(Icons.picture_in_picture),
                                 ),
                                 onSaved: (newValue) => newValue == ""
-                                    ? _picture = "images/unknown_entreprise.png"
+                                    ? _picture = "images/unknown_supplier.png"
                                     : _picture = newValue,
                               ),
                               Padding(
@@ -348,24 +352,26 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
         onPressed: () {
           if (_formKey.currentState.validate()) {
             _formKey.currentState.save();
-            Entreprise ent;
-            if (editingEnt != null) {
-              ent = Entreprise(
-                id: editingEnt.id,
-                name: _name,
+            ManageSupplierArguments msa;
+            if (editingSupp.supplier != null) {
+              Supplier supp = Supplier(
+                id: editingSupp.supplier.id,
                 email: _email,
+                name: _name,
                 tel: _tel,
                 picture: _pathPicture ?? _picture,
               );
-              _onUpdateEntreprise(ent);
+              msa = ManageSupplierArguments(supp, editingSupp.entreprise);
+              _onUpdateSupplier(msa);
             } else {
-              ent = Entreprise(
-                name: _name,
+              Supplier supp = Supplier(
                 email: _email,
+                name: _name,
                 tel: _tel,
                 picture: _pathPicture ?? _picture,
               );
-              _onAddEntreprise(ent);
+              msa = ManageSupplierArguments(supp, editingSupp.entreprise);
+              _onAddSupplier(msa);
             }
           }
         },

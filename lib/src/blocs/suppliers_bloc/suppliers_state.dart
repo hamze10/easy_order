@@ -11,14 +11,16 @@ class SuppliersLoadInProgress extends SuppliersState {}
 
 class SuppliersLoadSuccess extends SuppliersState {
   final List<Supplier> suppliers;
+  final Entreprise entreprise;
 
-  const SuppliersLoadSuccess([this.suppliers = const []]);
-
-  @override
-  List<Object> get props => [suppliers];
+  const SuppliersLoadSuccess([this.suppliers = const [], this.entreprise]);
 
   @override
-  String toString() => 'SuppliersLoadSuccess {suppliers : $suppliers}';
+  List<Object> get props => [suppliers, entreprise];
+
+  @override
+  String toString() =>
+      'SuppliersLoadSuccess {suppliers : $suppliers, entreprise : $entreprise}';
 }
 
 class SuppliersLoadFailure extends SuppliersState {}
