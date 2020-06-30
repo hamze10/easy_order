@@ -87,6 +87,10 @@ class _EntrepriseListState extends State<EntrepriseList> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: GestureDetector(
+                onTap: () {
+                  Navigator.pushNamed(context, '/suppliers',
+                      arguments: _entreprises[i].suppliers);
+                },
                 child: Slidable(
                   actionPane: SlidableScrollActionPane(),
                   actionExtentRatio: 0.25,

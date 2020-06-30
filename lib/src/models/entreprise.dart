@@ -1,4 +1,5 @@
 import 'package:easy_order/src/entities/entreprise_entity.dart';
+import 'package:easy_order/src/models/supplier.dart';
 
 class Entreprise {
   final String id;
@@ -6,7 +7,7 @@ class Entreprise {
   final String email;
   final String address;
   final List<dynamic> owners;
-  final List<dynamic> suppliers;
+  final List<Supplier> suppliers;
   final String tel;
   final String picture;
 
@@ -27,7 +28,7 @@ class Entreprise {
     String email,
     String address,
     List<dynamic> owners,
-    List<dynamic> suppliers,
+    List<Supplier> suppliers,
     String tel,
     String picture,
   }) {

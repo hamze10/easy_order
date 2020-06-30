@@ -1,11 +1,10 @@
 part of 'entreprises_bloc.dart';
 
 @immutable
-abstract class EntreprisesEvent {
+abstract class EntreprisesEvent extends Equatable {
   const EntreprisesEvent();
 
   @override
-  // ignore: override_on_non_overriding_member
   List<Object> get props => [];
 }
 

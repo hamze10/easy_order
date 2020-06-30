@@ -2,17 +2,18 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:easy_order/src/models/entreprise.dart';
-import 'package:easy_order/src/repositories/entreprise_repository.dart';
+import 'package:easy_order/src/repositories/firebase_entreprise_repository.dart';
+import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
 part 'entreprises_event.dart';
 part 'entreprises_state.dart';
 
 class EntreprisesBloc extends Bloc<EntreprisesEvent, EntreprisesState> {
-  final EntrepriseRepository _entrepriseRepository;
+  final FirebaseEntrepriseRepository _entrepriseRepository;
   StreamSubscription _entrepriseSubscription;
 
-  EntreprisesBloc({@required EntrepriseRepository entrepriseRepository})
+  EntreprisesBloc({@required FirebaseEntrepriseRepository entrepriseRepository})
       : assert(entrepriseRepository != null),
         _entrepriseRepository = entrepriseRepository;
 

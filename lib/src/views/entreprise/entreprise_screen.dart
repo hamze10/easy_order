@@ -3,10 +3,10 @@ import 'package:easy_order/src/views/entreprise/entreprise_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EntreprisePage extends StatelessWidget {
+class EntrepriseScreen extends StatelessWidget {
   final String _displayName;
 
-  EntreprisePage({Key key, @required String displayName})
+  EntrepriseScreen({Key key, @required String displayName})
       : assert(displayName != null),
         _displayName = displayName,
         super(key: key);

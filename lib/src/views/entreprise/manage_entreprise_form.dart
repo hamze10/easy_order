@@ -34,7 +34,6 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
   String _picture;
   String _pathPicture;
 
-  // ignore: unused_element
   FirebaseEntrepriseRepository get _entrepriseRepository =>
       widget._entrepriseRepository;
   Entreprise get editingEnt => widget._entreprise;

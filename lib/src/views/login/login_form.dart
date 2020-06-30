@@ -23,7 +23,6 @@ class _LoginFormState extends State<LoginForm> {
 
   LoginBloc _loginBloc;
 
-  // ignore: unused_element
   UserRepository get _userRepository => widget._userRepository;
 
   bool get isPopulated =>
