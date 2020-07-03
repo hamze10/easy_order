@@ -37,19 +37,16 @@ class FirebaseSupplierRepository implements SupplierRepository {
         withPicture = supplier.copyWith(picture: dlURL);
       }
     }
-    return await supplierCollection
+    return supplierCollection
         .add(withPicture.toEntity().toDocument())
-        .then((value) async {
-      await entrepriseCollection
-          .document(entreprise.id)
-          .get()
-          .then((snapshot) async {
+        .then((value) {
+      entrepriseCollection.document(entreprise.id).get().then((snapshot) {
         Entreprise ent =
             Entreprise.fromEntity(EntrepriseEntity.fromSnapshot(snapshot));
         Supplier toAdd = supplier.copyWith(id: value.documentID);
         List<Supplier> supp = List<Supplier>.from(ent.suppliers)..add(toAdd);
         ent = ent.copyWith(suppliers: supp);
-        await entrepriseCollection
+        entrepriseCollection
             .document(entreprise.id)
             .updateData(ent.toEntity().toDocument());
       });

@@ -13,7 +13,7 @@ class SuppliersLoadSuccess extends SuppliersState {
   final List<Supplier> suppliers;
   final Entreprise entreprise;
 
-  const SuppliersLoadSuccess([this.suppliers = const [], this.entreprise]);
+  const SuppliersLoadSuccess(this.suppliers, this.entreprise);
 
   @override
   List<Object> get props => [suppliers, entreprise];

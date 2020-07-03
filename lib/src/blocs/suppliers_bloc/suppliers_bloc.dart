@@ -34,11 +34,11 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
   }
 
   Stream<SuppliersState> _mapLoadSuppliersToState(LoadSuppliers event) async* {
+    Entreprise ent = event.entreprise;
     _supplierSubscription?.cancel();
     _supplierSubscription = _supplierRepository
         .suppliers(event.suppliers)
-        .listen(
-            (supplier) => add(SuppliersUpdated(supplier, event.entreprise)));
+        .listen((supplier) => add(SuppliersUpdated(supplier, ent)));
   }
 
   Stream<SuppliersState> _mapSuppliersUpdateToState(
