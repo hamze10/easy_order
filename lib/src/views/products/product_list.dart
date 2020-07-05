@@ -1,20 +1,19 @@
 import 'package:easy_order/src/models/product/productArguments.dart';
-import 'package:easy_order/src/models/suppliers/manageSupplierArguments.dart';
-import 'package:easy_order/src/models/suppliers/supplierArguments.dart';
+import 'package:easy_order/src/utils/currency_converter.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class SupplierList extends StatefulWidget {
-  final SupplierArguments _suppliers;
+class ProductList extends StatefulWidget {
+  final ProductArguments _products;
 
-  SupplierList({Key key, @required SupplierArguments suppliers})
-      : assert(suppliers != null),
-        _suppliers = suppliers,
+  ProductList({Key key, @required ProductArguments products})
+      : assert(products != null),
+        _products = products,
         super(key: key);
 
   @override
-  _SupplierListState createState() => _SupplierListState();
+  _ProductListState createState() => _ProductListState();
 }
 
 Widget _leftWidget(BuildContext context) => Padding(
@@ -29,18 +28,26 @@ Widget _leftWidget(BuildContext context) => Padding(
       ),
     );
 
-class _SupplierListState extends State<SupplierList> {
-  SupplierArguments get _suppliers => widget._suppliers;
+Widget _rightWidget(BuildContext context) => GestureDetector(
+      onTap: () {},
+      child: Tab(
+        icon: Image.asset('images/icon_shopping_cart.png'),
+      ),
+    );
+
+class _ProductListState extends State<ProductList> {
+  ProductArguments get _products => widget._products;
   final SlidableController _slidableController = SlidableController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'FOURNISSEURS',
+        title: 'PRODUITS',
         gradientBegin: Colors.red[700],
         grandientEnd: Colors.red[300],
         leftWidget: _leftWidget(context),
+        rightWidget: _rightWidget(context),
       ),
       body: Column(
         children: <Widget>[
@@ -61,51 +68,38 @@ class _SupplierListState extends State<SupplierList> {
               padding: const EdgeInsets.all(8.0),
               child: ListView.separated(
                 separatorBuilder: (context, i) => Divider(),
-                itemCount: _suppliers.suppliers.length,
+                itemCount: _products.products.length,
                 itemBuilder: (context, i) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/products',
-                          arguments: ProductArguments(
-                            _suppliers.suppliers[i].products,
-                            _suppliers.suppliers[i],
-                          ),
-                        );
-                      },
+                      onTap: null,
                       child: Slidable(
                         actionPane: SlidableScrollActionPane(),
                         actionExtentRatio: 0.25,
-                        key: Key(_suppliers.suppliers[i].id),
+                        key: Key(_products.products[i].id),
                         controller: _slidableController,
                         child: ListTile(
                           leading: CircleAvatar(
                             radius: 30.0,
-                            backgroundImage: !_suppliers.suppliers[i].picture
+                            backgroundImage: !_products.products[i].picture
                                     .startsWith("images/")
-                                ? NetworkImage(_suppliers.suppliers[i].picture)
-                                : AssetImage(_suppliers.suppliers[i].picture),
+                                ? NetworkImage(_products.products[i].picture)
+                                : AssetImage(_products.products[i].picture),
                             backgroundColor: Colors.grey[300],
                           ),
-                          title: Text(_suppliers.suppliers[i].name),
-                          subtitle: Text(_suppliers.suppliers[i].email +
-                              " · " +
-                              _suppliers.suppliers[i].tel),
+                          title: Text(_products.products[i].name),
+                          subtitle: Text(
+                            _products.products[i].description,
+                          ),
+                          trailing: Icon(Icons.shopping_cart),
                         ),
                         secondaryActions: <Widget>[
                           IconSlideAction(
                             caption: 'Modifier',
                             color: Colors.grey[200],
                             icon: Icons.edit,
-                            onTap: () {
-                              Navigator.pushNamed(context, '/manageSupplier',
-                                  arguments: ManageSupplierArguments(
-                                      _suppliers.suppliers[i],
-                                      _suppliers.entreprise));
-                            },
+                            onTap: () {},
                           ),
                         ],
                       ),
@@ -118,13 +112,7 @@ class _SupplierListState extends State<SupplierList> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/manageSupplier',
-              arguments: ManageSupplierArguments(
-                null,
-                _suppliers.entreprise,
-              ));
-        },
+        onPressed: () {},
         backgroundColor: Colors.red[400],
         child: Icon(Icons.add),
       ),

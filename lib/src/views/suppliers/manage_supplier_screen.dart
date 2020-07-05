@@ -1,6 +1,6 @@
 import 'package:easy_order/src/blocs/manage_supplier_bloc/manage_supplier_bloc.dart';
-import 'package:easy_order/src/models/manageSupplierArguments.dart';
-import 'package:easy_order/src/repositories/firebase_supplier_repository.dart';
+import 'package:easy_order/src/models/suppliers/manageSupplierArguments.dart';
+import 'package:easy_order/src/repositories/supplier/firebase_supplier_repository.dart';
 import 'package:easy_order/src/views/suppliers/manage_supplier_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

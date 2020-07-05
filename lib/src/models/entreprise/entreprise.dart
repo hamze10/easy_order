@@ -1,5 +1,5 @@
 import 'package:easy_order/src/entities/entreprise_entity.dart';
-import 'package:easy_order/src/models/supplier.dart';
+import 'package:easy_order/src/models/suppliers/supplier.dart';
 
 class Entreprise {
   final String id;
@@ -15,11 +15,11 @@ class Entreprise {
     this.name,
     this.id,
     this.email,
-    this.address = '',
-    this.owners = const [],
-    this.suppliers = const [],
+    this.address,
+    this.owners,
+    this.suppliers,
     this.tel,
-    this.picture = "",
+    this.picture,
   });
 
   Entreprise copyWith({

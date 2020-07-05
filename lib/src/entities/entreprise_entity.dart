@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:easy_order/src/models/supplier.dart';
+import 'package:easy_order/src/models/suppliers/supplier.dart';
 import 'package:equatable/equatable.dart';
 
 class EntrepriseEntity extends Equatable {

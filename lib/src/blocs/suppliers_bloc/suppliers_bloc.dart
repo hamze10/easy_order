@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:easy_order/src/models/entreprise.dart';
-import 'package:easy_order/src/models/supplier.dart';
-import 'package:easy_order/src/repositories/firebase_supplier_repository.dart';
+import 'package:easy_order/src/models/entreprise/entreprise.dart';
+import 'package:easy_order/src/models/suppliers/supplier.dart';
+import 'package:easy_order/src/repositories/supplier/firebase_supplier_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 

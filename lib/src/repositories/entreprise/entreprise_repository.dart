@@ -1,4 +1,4 @@
-import 'package:easy_order/src/models/entreprise.dart';
+import 'package:easy_order/src/models/entreprise/entreprise.dart';
 
 abstract class EntrepriseRepository {
   Future<void> addNewEntreprise(Entreprise entreprise);

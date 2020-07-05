@@ -1,5 +1,5 @@
 import 'package:easy_order/src/blocs/blocs.dart';
-import 'package:easy_order/src/repositories/user_repository.dart';
+import 'package:easy_order/src/repositories/user/user_repository.dart';
 import 'package:easy_order/src/views/login/login_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

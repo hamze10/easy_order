@@ -1,6 +1,6 @@
 import 'package:easy_order/src/blocs/authentication_bloc/authentication_bloc.dart';
-import 'package:easy_order/src/models/entreprise.dart';
-import 'package:easy_order/src/models/supplierArguments.dart';
+import 'package:easy_order/src/models/entreprise/entreprise.dart';
+import 'package:easy_order/src/models/suppliers/supplierArguments.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,15 +22,6 @@ class EntrepriseList extends StatefulWidget {
   @override
   _EntrepriseListState createState() => _EntrepriseListState();
 }
-
-/*Widget _leftWidget(GlobalKey<ScaffoldState> key) => IconButton(
-      onPressed: () {
-        key.currentState.openDrawer();
-      },
-      icon: Icon(Icons.account_circle),
-      iconSize: 40.0,
-      color: Colors.white,
-    );*/
 
 Widget _leftWidget(GlobalKey<ScaffoldState> key) => Padding(
       padding: EdgeInsets.only(left: 16.0),
@@ -56,9 +47,8 @@ class _EntrepriseListState extends State<EntrepriseList> {
       key: _key,
       appBar: CustomAppBar(
         title: 'ENTREPRISES',
-        gradientBegin: Colors.teal[600],
-        grandientEnd: Colors.teal[400],
-        key: _key,
+        gradientBegin: Colors.red[700],
+        grandientEnd: Colors.red[300],
         leftWidget: _leftWidget(_key),
       ),
       drawer: Drawer(
@@ -67,21 +57,27 @@ class _EntrepriseListState extends State<EntrepriseList> {
           children: <Widget>[
             DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.teal[400],
+                gradient: LinearGradient(
+                  colors: <Color>[
+                    Colors.red[700],
+                    Colors.red[300],
+                  ],
+                ),
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
+                  CircleAvatar(
+                    backgroundImage: AssetImage('images/unknown_supplier.png'),
+                    backgroundColor: Colors.grey[300],
+                    radius: 40.0,
+                  ),
                   Text(
                     widget._displayName,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 24.0,
+                      fontSize: 18.0,
                     ),
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.grey[300],
-                    radius: 40.0,
                   ),
                 ],
               ),
@@ -175,7 +171,7 @@ class _EntrepriseListState extends State<EntrepriseList> {
         onPressed: () {
           Navigator.pushNamed(context, '/manageEntreprise', arguments: null);
         },
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.red[400],
         child: Icon(Icons.add),
       ),
     );

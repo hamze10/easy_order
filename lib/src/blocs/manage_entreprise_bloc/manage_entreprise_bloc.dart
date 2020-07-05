@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:easy_order/src/models/entreprise.dart';
-import 'package:easy_order/src/repositories/firebase_entreprise_repository.dart';
+import 'package:easy_order/src/models/entreprise/entreprise.dart';
+import 'package:easy_order/src/repositories/entreprise/firebase_entreprise_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 

@@ -1,5 +1,5 @@
 import 'package:easy_order/src/blocs/suppliers_bloc/suppliers_bloc.dart';
-import 'package:easy_order/src/models/supplierArguments.dart';
+import 'package:easy_order/src/models/suppliers/supplierArguments.dart';
 import 'package:easy_order/src/views/suppliers/supplier_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,6 +9,7 @@ class SupplierScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final SupplierArguments suppliers =
         ModalRoute.of(context).settings.arguments as SupplierArguments;
+
     BlocProvider.of<SuppliersBloc>(context)
         .add(LoadSuppliers(suppliers.suppliers, suppliers.entreprise));
 

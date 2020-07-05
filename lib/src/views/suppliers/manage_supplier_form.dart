@@ -1,7 +1,7 @@
 import 'package:easy_order/src/blocs/manage_supplier_bloc/manage_supplier_bloc.dart';
-import 'package:easy_order/src/models/manageSupplierArguments.dart';
-import 'package:easy_order/src/models/supplier.dart';
-import 'package:easy_order/src/repositories/firebase_supplier_repository.dart';
+import 'package:easy_order/src/models/suppliers/manageSupplierArguments.dart';
+import 'package:easy_order/src/models/suppliers/supplier.dart';
+import 'package:easy_order/src/repositories/supplier/firebase_supplier_repository.dart';
 import 'package:easy_order/src/utils/validators.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -123,7 +123,7 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.red[400],
         actions: actions,
         title: Text(
           editingSupp.supplier != null
@@ -359,6 +359,7 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
                 email: _email,
                 name: _name,
                 tel: _tel,
+                products: editingSupp.supplier.products,
                 picture: _pathPicture ?? _picture,
               );
               msa = ManageSupplierArguments(supp, editingSupp.entreprise);
@@ -368,6 +369,7 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
                 email: _email,
                 name: _name,
                 tel: _tel,
+                products: const [],
                 picture: _pathPicture ?? _picture,
               );
               msa = ManageSupplierArguments(supp, editingSupp.entreprise);
@@ -376,7 +378,7 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
           }
         },
         child: Icon(Icons.check),
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.red[400],
       ),
     );
   }

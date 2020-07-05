@@ -4,7 +4,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final double _preferredHeight = 110.0;
   final String _title;
   final Color _gradientBegin, _gradientEnd;
-  final GlobalKey<ScaffoldState> _key;
   final Widget _leftWidget;
   final Widget _rightWidget;
 
@@ -14,11 +13,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     Color grandientEnd,
     Widget leftWidget,
     Widget rightWidget,
-    GlobalKey<ScaffoldState> key,
   })  : _title = title,
         _gradientBegin = gradientBegin,
         _gradientEnd = grandientEnd,
-        _key = key,
         _leftWidget = leftWidget,
         _rightWidget = rightWidget;
 

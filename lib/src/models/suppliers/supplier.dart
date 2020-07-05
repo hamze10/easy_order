@@ -1,20 +1,21 @@
 import 'package:easy_order/src/entities/supplier.entity.dart';
+import 'package:easy_order/src/models/product/product.dart';
 
 class Supplier {
   final String id;
   final String email;
   final String name;
   final String picture;
-  final List<dynamic> products;
+  final List<Product> products;
   final String tel;
 
   Supplier({
     this.id,
-    this.email = "",
-    this.name = "",
-    this.picture = "",
-    this.products = const [],
-    this.tel = "",
+    this.email,
+    this.name,
+    this.picture,
+    this.products,
+    this.tel,
   });
 
   Supplier copyWith({
@@ -22,7 +23,7 @@ class Supplier {
     String email,
     String name,
     String picture,
-    List<dynamic> products,
+    List<Product> products,
     String tel,
   }) {
     return Supplier(

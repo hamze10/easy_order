@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easy_order/src/entities/entreprise_entity.dart';
-import 'package:easy_order/src/models/entreprise.dart';
-import 'package:easy_order/src/repositories/entreprise_repository.dart';
+import 'package:easy_order/src/models/entreprise/entreprise.dart';
+import 'package:easy_order/src/repositories/entreprise/entreprise_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 

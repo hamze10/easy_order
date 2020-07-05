@@ -1,6 +1,6 @@
 import 'package:easy_order/src/blocs/manage_entreprise_bloc/manage_entreprise_bloc.dart';
-import 'package:easy_order/src/models/entreprise.dart';
-import 'package:easy_order/src/repositories/firebase_entreprise_repository.dart';
+import 'package:easy_order/src/models/entreprise/entreprise.dart';
+import 'package:easy_order/src/repositories/entreprise/firebase_entreprise_repository.dart';
 import 'package:easy_order/src/utils/validators.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -122,7 +122,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.red[400],
         actions: actions,
         title: Text(
           editingEnt != null
@@ -355,6 +355,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                 name: _name,
                 email: _email,
                 tel: _tel,
+                suppliers: editingEnt.suppliers,
                 picture: _pathPicture ?? _picture,
               );
               _onUpdateEntreprise(ent);
@@ -363,6 +364,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                 name: _name,
                 email: _email,
                 tel: _tel,
+                suppliers: const [],
                 picture: _pathPicture ?? _picture,
               );
               _onAddEntreprise(ent);
@@ -370,7 +372,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
           }
         },
         child: Icon(Icons.check),
-        backgroundColor: Colors.teal[400],
+        backgroundColor: Colors.red[400],
       ),
     );
   }

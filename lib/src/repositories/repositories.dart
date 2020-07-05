@@ -1,3 +1,3 @@
-export 'user_repository.dart';
-export 'firebase_entreprise_repository.dart';
-export 'firebase_supplier_repository.dart';
+export 'user/user_repository.dart';
+export 'entreprise/firebase_entreprise_repository.dart';
+export 'supplier/firebase_supplier_repository.dart';

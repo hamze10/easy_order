@@ -1,5 +1,5 @@
-import 'package:easy_order/src/models/entreprise.dart';
-import 'package:easy_order/src/models/supplier.dart';
+import 'package:easy_order/src/models/entreprise/entreprise.dart';
+import 'package:easy_order/src/models/suppliers/supplier.dart';
 
 class SupplierArguments {
   List<Supplier> suppliers;

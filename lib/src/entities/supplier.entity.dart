@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_order/src/models/product/product.dart';
 import 'package:equatable/equatable.dart';
 
 class SupplierEntity extends Equatable {
@@ -6,7 +7,7 @@ class SupplierEntity extends Equatable {
   final String email;
   final String name;
   final String picture;
-  final List<dynamic> products;
+  final List<Product> products;
   final String tel;
 
   const SupplierEntity(
@@ -36,7 +37,7 @@ class SupplierEntity extends Equatable {
       json["email"] as String,
       json["name"] as String,
       json["picture"] as String,
-      json["products"] as List<dynamic>,
+      json["products"] as List<Product>,
       json["tel"] as String,
     );
   }
@@ -47,9 +48,25 @@ class SupplierEntity extends Equatable {
       snap.data['email'],
       snap.data['name'],
       snap.data['picture'],
-      snap.data['products'],
+      stringToProduct(List<String>.from(snap.data['products'])),
       snap.data['tel'],
     );
+  }
+
+  static List<Product> stringToProduct(List<String> list) {
+    List<Product> toSend = [];
+    for (String s in list) {
+      toSend.add(Product(id: s));
+    }
+    return toSend;
+  }
+
+  static List<String> productToString(List<Product> list) {
+    List<String> toSend = [];
+    for (Product s in list) {
+      toSend.add(s.id);
+    }
+    return toSend;
   }
 
   Map<String, Object> toDocument() {
@@ -57,7 +74,7 @@ class SupplierEntity extends Equatable {
       "email": email,
       "name": name,
       "picture": picture,
-      "products": products,
+      "products": productToString(products),
       "tel": tel,
     };
   }
