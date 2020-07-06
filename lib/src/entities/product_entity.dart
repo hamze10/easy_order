@@ -28,7 +28,7 @@ class ProductEntity extends Equatable {
       "name": name,
       "description": description,
       "typeProduit": typeProduit,
-      "curency": currency,
+      "currency": currency,
       "price": price,
       "picture": picture,
     };
@@ -71,7 +71,7 @@ class ProductEntity extends Equatable {
       "name": name,
       "description": description,
       "typeProduit": typeProduit,
-      "curency": CurrencyConvertor.convert(currency),
+      "currency": CurrencyConvertor.convert(currency),
       "price": price,
       "picture": picture,
     };

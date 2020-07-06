@@ -167,12 +167,13 @@ class _EntrepriseListState extends State<EntrepriseList> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushNamed(context, '/manageEntreprise', arguments: null);
         },
         backgroundColor: Colors.red[400],
-        child: Icon(Icons.add),
+        icon: Icon(Icons.add_circle),
+        label: Text("Nouvelle entreprise"),
       ),
     );
   }

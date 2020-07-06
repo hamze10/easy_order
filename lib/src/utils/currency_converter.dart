@@ -38,4 +38,11 @@ class CurrencyConvertor {
         return null;
     }
   }
+
+  static bool checkIfValidCurrency(String currency) {
+    return currency == "€" ||
+        currency == "\$" ||
+        currency == "MAD" ||
+        currency == "£";
+  }
 }

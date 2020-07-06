@@ -1,42 +1,44 @@
-import 'package:easy_order/src/blocs/manage_entreprise_bloc/manage_entreprise_bloc.dart';
-import 'package:easy_order/src/models/entreprise/entreprise.dart';
-import 'package:easy_order/src/repositories/entreprise/firebase_entreprise_repository.dart';
-import 'package:easy_order/src/utils/validators.dart';
+import 'package:easy_order/src/blocs/manage_product_bloc/manage_product_bloc.dart';
+import 'package:easy_order/src/models/product/currency.dart';
+import 'package:easy_order/src/models/product/manageProductArguments.dart';
+import 'package:easy_order/src/models/product/product.dart';
+import 'package:easy_order/src/repositories/product/firebase_product_repository.dart';
+import 'package:easy_order/src/utils/currency_converter.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ManageEntrepriseForm extends StatefulWidget {
-  final FirebaseEntrepriseRepository _entrepriseRepository;
-  final Entreprise _entreprise;
+class ManageProductForm extends StatefulWidget {
+  final FirebaseProductRepository _productRepository;
+  final ManageProductArguments _manageProductArguments;
 
-  ManageEntrepriseForm(
-      {Key key,
-      @required FirebaseEntrepriseRepository entrepriseRepository,
-      @required Entreprise entreprise})
-      : assert(entrepriseRepository != null),
-        _entrepriseRepository = entrepriseRepository,
-        _entreprise = entreprise,
+  ManageProductForm({
+    Key key,
+    @required FirebaseProductRepository productRepository,
+    @required ManageProductArguments manageProductArguments,
+  })  : assert(productRepository != null && manageProductArguments != null),
+        _productRepository = productRepository,
+        _manageProductArguments = manageProductArguments,
         super(key: key);
 
   @override
-  _ManageEntrepriseFormState createState() => _ManageEntrepriseFormState();
+  _ManageProductFormState createState() => _ManageProductFormState();
 }
 
-class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
+class _ManageProductFormState extends State<ManageProductForm> {
   static final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  ManageEntrepriseBloc _manageEntrepriseBloc;
+  ManageProductBloc _manageProductBloc;
 
   String _name;
-  String _email;
-  String _tel;
+  String _description;
+  String _typeProduit;
+  Currency _currency;
+  double _price;
   String _picture;
   String _pathPicture;
 
-  FirebaseEntrepriseRepository get _entrepriseRepository =>
-      widget._entrepriseRepository;
-  Entreprise get editingEnt => widget._entreprise;
+  ManageProductArguments get editingProd => widget._manageProductArguments;
 
   void _openFileExplorer() async {
     try {
@@ -52,24 +54,24 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
   @override
   void initState() {
     super.initState();
-    _manageEntrepriseBloc = BlocProvider.of<ManageEntrepriseBloc>(context);
+    _manageProductBloc = BlocProvider.of<ManageProductBloc>(context);
   }
 
-  void _onAddEntreprise(Entreprise ent) {
-    _manageEntrepriseBloc.add(
-      AddEntreprise(ent),
+  void _onAddProduct(ManageProductArguments mpa) {
+    _manageProductBloc.add(
+      AddProduct(mpa.product, mpa.supplier),
     );
   }
 
-  void _onUpdateEntreprise(Entreprise ent) {
-    _manageEntrepriseBloc.add(
-      UpdateEntreprise(ent),
+  void _onUpdateProduct(ManageProductArguments mpa) {
+    _manageProductBloc.add(
+      UpdateProduct(mpa.product),
     );
   }
 
-  void _onDeleteEntreprise(Entreprise ent) {
-    _manageEntrepriseBloc.add(
-      DeleteEntreprise(ent),
+  void _onDeleteProduct(ManageProductArguments mpa) {
+    _manageProductBloc.add(
+      DeleteProduct(mpa.product, mpa.supplier),
     );
   }
 
@@ -81,7 +83,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
   @override
   Widget build(BuildContext context) {
     List<Widget> actions = [];
-    if (editingEnt != null) {
+    if (editingProd.product != null) {
       actions.add(
         IconButton(
           icon: Icon(
@@ -94,8 +96,8 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                 builder: (BuildContext context) {
                   return AlertDialog(
                     title: Text("Suppression"),
-                    content: Text(
-                        "Voulez-vous vraiment supprimer cette entreprise ? "),
+                    content:
+                        Text("Voulez-vous vraiment supprimer ce produit ? "),
                     actions: [
                       FlatButton(
                         child: Text("Non"),
@@ -113,7 +115,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                   );
                 }).then((value) {
               if (value == true) {
-                _onDeleteEntreprise(editingEnt);
+                _onDeleteProduct(editingProd);
               }
             });
           },
@@ -125,12 +127,12 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
         backgroundColor: Colors.red[400],
         actions: actions,
         title: Text(
-          editingEnt != null
-              ? 'Modifier une entreprise'
-              : 'Ajouter une entreprise',
+          editingProd.product != null
+              ? 'Modifier un produit'
+              : 'Ajouter un produit',
         ),
       ),
-      body: BlocListener<ManageEntrepriseBloc, ManageEntrepriseState>(
+      body: BlocListener<ManageProductBloc, ManageProductState>(
         listener: (context, state) {
           if (state.isFailure) {
             Scaffold.of(context)
@@ -183,7 +185,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
             Navigator.pop(context);
           }
         },
-        child: BlocBuilder<ManageEntrepriseBloc, ManageEntrepriseState>(
+        child: BlocBuilder<ManageProductBloc, ManageProductState>(
           builder: (context, state) {
             return SafeArea(
               child: ListView(
@@ -201,8 +203,9 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16.0, vertical: 8.0),
                               child: TextFormField(
-                                initialValue:
-                                    editingEnt != null ? editingEnt.name : '',
+                                initialValue: editingProd.product != null
+                                    ? editingProd.product.name
+                                    : '',
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
@@ -226,24 +229,24 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16.0, vertical: 8.0),
                               child: TextFormField(
-                                initialValue:
-                                    editingEnt != null ? editingEnt.email : '',
+                                initialValue: editingProd.product != null
+                                    ? editingProd.product.description
+                                    : '',
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.grey[200],
                                     ),
                                   ),
-                                  labelText: 'Email',
-                                  suffixIcon: Icon(Icons.email),
+                                  labelText: 'Description',
+                                  suffixIcon: Icon(Icons.description),
                                 ),
                                 validator: (value) {
-                                  return !Validators.isValidEmail(value)
-                                      ? 'Veuillez entrer un email valide'
+                                  return value.isEmpty
+                                      ? 'Veuillez entrer une description'
                                       : null;
                                 },
-                                keyboardType: TextInputType.emailAddress,
-                                onSaved: (newValue) => _email = newValue,
+                                onSaved: (newValue) => _description = newValue,
                               ),
                             ),
                           ),
@@ -252,24 +255,83 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16.0, vertical: 8.0),
                               child: TextFormField(
-                                initialValue:
-                                    editingEnt != null ? editingEnt.tel : '',
+                                initialValue: editingProd.product != null
+                                    ? editingProd.product.typeProduit
+                                    : '',
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
                                       color: Colors.grey[200],
                                     ),
                                   ),
-                                  labelText: 'Tel',
-                                  suffixIcon: Icon(Icons.phone),
+                                  labelText: 'Type de produit',
+                                  suffixIcon: Icon(Icons.category),
                                 ),
                                 validator: (value) {
                                   return value.isEmpty
-                                      ? 'Veuillez entrer un numéro valide'
+                                      ? 'Veuillez entrer un type de produit'
                                       : null;
                                 },
-                                keyboardType: TextInputType.phone,
-                                onSaved: (newValue) => _tel = newValue,
+                                onSaved: (newValue) => _typeProduit = newValue,
+                              ),
+                            ),
+                          ),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: TextFormField(
+                                initialValue: editingProd.product != null
+                                    ? CurrencyConvertor.convert(
+                                        editingProd.product.currency)
+                                    : '',
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey[200],
+                                    ),
+                                  ),
+                                  labelText: 'Devise',
+                                  suffixIcon: Icon(Icons.euro_symbol),
+                                ),
+                                validator: (value) {
+                                  return value.isEmpty
+                                      ? 'Veuillez entrer une devise'
+                                      : !CurrencyConvertor.checkIfValidCurrency(
+                                              value)
+                                          ? 'La devise doit être €, \$, MAD ou £'
+                                          : null;
+                                },
+                                onSaved: (newValue) => _currency =
+                                    CurrencyConvertor.toCurrency(newValue),
+                              ),
+                            ),
+                          ),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: TextFormField(
+                                initialValue: editingProd.product != null
+                                    ? editingProd.product.price.toString()
+                                    : '',
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey[200],
+                                    ),
+                                  ),
+                                  labelText: 'Prix',
+                                  suffixIcon: Icon(Icons.monetization_on),
+                                ),
+                                validator: (value) {
+                                  return value.isEmpty
+                                      ? 'Veuillez entrer un prix'
+                                      : null;
+                                },
+                                keyboardType: TextInputType.number,
+                                onSaved: (newValue) =>
+                                    _price = double.parse(newValue),
                               ),
                             ),
                           ),
@@ -280,8 +342,8 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                               child: Column(
                                 children: <Widget>[
                                   TextFormField(
-                                    initialValue: editingEnt != null
-                                        ? editingEnt.picture
+                                    initialValue: editingProd.product != null
+                                        ? editingProd.product.picture
                                         : '',
                                     decoration: InputDecoration(
                                       enabledBorder: UnderlineInputBorder(
@@ -289,7 +351,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                                           color: Colors.grey[200],
                                         ),
                                       ),
-                                      labelText: 'Logo',
+                                      labelText: 'Photo du produit',
                                       hintText: 'Entrez un lien',
                                       hintStyle: TextStyle(
                                         fontSize: 12.0,
@@ -299,7 +361,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                                     ),
                                     onSaved: (newValue) => newValue == ""
                                         ? _picture =
-                                            "images/unknown_entreprise.png"
+                                            "images/unknown_product.png"
                                         : _picture = newValue,
                                   ),
                                   Padding(
@@ -356,26 +418,30 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
         onPressed: () {
           if (_formKey.currentState.validate()) {
             _formKey.currentState.save();
-            Entreprise ent;
-            if (editingEnt != null) {
-              ent = Entreprise(
-                id: editingEnt.id,
+            ManageProductArguments mpa;
+            if (editingProd.product != null) {
+              Product prod = Product(
+                id: editingProd.product.id,
                 name: _name,
-                email: _email,
-                tel: _tel,
-                suppliers: editingEnt.suppliers,
+                description: _description,
+                typeProduit: _typeProduit,
+                currency: _currency,
+                price: _price,
                 picture: _pathPicture ?? _picture,
               );
-              _onUpdateEntreprise(ent);
+              mpa = ManageProductArguments(prod, editingProd.supplier);
+              _onUpdateProduct(mpa);
             } else {
-              ent = Entreprise(
+              Product prod = Product(
                 name: _name,
-                email: _email,
-                tel: _tel,
-                suppliers: const [],
+                description: _description,
+                typeProduit: _typeProduit,
+                currency: _currency,
+                price: _price,
                 picture: _pathPicture ?? _picture,
               );
-              _onAddEntreprise(ent);
+              mpa = ManageProductArguments(prod, editingProd.supplier);
+              _onAddProduct(mpa);
             }
           }
         },

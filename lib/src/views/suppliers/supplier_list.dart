@@ -117,7 +117,7 @@ class _SupplierListState extends State<SupplierList> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushNamed(context, '/manageSupplier',
               arguments: ManageSupplierArguments(
@@ -126,7 +126,8 @@ class _SupplierListState extends State<SupplierList> {
               ));
         },
         backgroundColor: Colors.red[400],
-        child: Icon(Icons.add),
+        icon: Icon(Icons.person_add),
+        label: Text('Nouveau fournisseur'),
       ),
     );
   }

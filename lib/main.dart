@@ -9,6 +9,7 @@ import 'package:easy_order/src/repositories/user/user_repository.dart';
 import 'package:easy_order/src/views/entreprise/entreprise_screen.dart';
 import 'package:easy_order/src/views/entreprise/manage_entreprise_screen.dart';
 import 'package:easy_order/src/views/login/login_screen.dart';
+import 'package:easy_order/src/views/products/manage_product_screen.dart';
 import 'package:easy_order/src/views/products/product_screen.dart';
 import 'package:easy_order/src/views/splash_screen.dart';
 import 'package:easy_order/src/repositories/repositories.dart';
@@ -106,7 +107,12 @@ class App extends StatelessWidget {
         },
         '/products': (context) {
           return ProductScreen();
-        }
+        },
+        '/manageProduct': (context) {
+          return ManageProductScreen(
+            productRepository: _productRepository,
+          );
+        },
       },
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {

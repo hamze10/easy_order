@@ -187,101 +187,23 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
         child: BlocBuilder<ManageSupplierBloc, ManageSupplierState>(
           builder: (context, state) {
             return SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: TextFormField(
-                            initialValue: editingSupp.supplier != null
-                                ? editingSupp.supplier.name
-                                : '',
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.grey[200],
-                                ),
-                              ),
-                              labelText: 'Nom',
-                              suffixIcon: Icon(Icons.perm_identity),
-                            ),
-                            validator: (value) {
-                              return value.isEmpty
-                                  ? 'Veuillez entrer un nom'
-                                  : null;
-                            },
-                            onSaved: (newValue) => _name = newValue,
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: TextFormField(
-                            initialValue: editingSupp.supplier != null
-                                ? editingSupp.supplier.email
-                                : '',
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.grey[200],
-                                ),
-                              ),
-                              labelText: 'Email',
-                              suffixIcon: Icon(Icons.email),
-                            ),
-                            validator: (value) {
-                              return !Validators.isValidEmail(value)
-                                  ? 'Veuillez entrer un email valide'
-                                  : null;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            onSaved: (newValue) => _email = newValue,
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: TextFormField(
-                            initialValue: editingSupp.supplier != null
-                                ? editingSupp.supplier.tel
-                                : '',
-                            decoration: InputDecoration(
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Colors.grey[200],
-                                ),
-                              ),
-                              labelText: 'Tel',
-                              suffixIcon: Icon(Icons.phone),
-                            ),
-                            validator: (value) {
-                              return value.isEmpty
-                                  ? 'Veuillez entrer un numéro valide'
-                                  : null;
-                            },
-                            keyboardType: TextInputType.phone,
-                            onSaved: (newValue) => _tel = newValue,
-                          ),
-                        ),
-                      ),
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8.0),
-                          child: Column(
-                            children: <Widget>[
-                              TextFormField(
+              child: ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        children: <Widget>[
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: TextFormField(
                                 initialValue: editingSupp.supplier != null
-                                    ? editingSupp.supplier.picture
+                                    ? editingSupp.supplier.name
                                     : '',
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
@@ -289,60 +211,146 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
                                       color: Colors.grey[200],
                                     ),
                                   ),
-                                  labelText: 'Logo',
-                                  hintText: 'Entrez un lien',
-                                  hintStyle: TextStyle(
-                                    fontSize: 12.0,
-                                  ),
-                                  suffixIcon: Icon(Icons.picture_in_picture),
+                                  labelText: 'Nom',
+                                  suffixIcon: Icon(Icons.perm_identity),
                                 ),
-                                onSaved: (newValue) => newValue == ""
-                                    ? _picture = "images/unknown_supplier.png"
-                                    : _picture = newValue,
+                                validator: (value) {
+                                  return value.isEmpty
+                                      ? 'Veuillez entrer un nom'
+                                      : null;
+                                },
+                                onSaved: (newValue) => _name = newValue,
                               ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0, vertical: 16.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Divider(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    Text(' OU '),
-                                    Expanded(
-                                      child: Divider(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 16.0),
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.teal[100],
-                                  radius: 25.0,
-                                  child: IconButton(
-                                    icon: Icon(
-                                      Icons.file_upload,
-                                      color: Colors.teal,
-                                      size: 25.0,
-                                    ),
-                                    onPressed: _openFileExplorer,
-                                    iconSize: 50.0,
-                                  ),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
-                        ),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: TextFormField(
+                                initialValue: editingSupp.supplier != null
+                                    ? editingSupp.supplier.email
+                                    : '',
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey[200],
+                                    ),
+                                  ),
+                                  labelText: 'Email',
+                                  suffixIcon: Icon(Icons.email),
+                                ),
+                                validator: (value) {
+                                  return !Validators.isValidEmail(value)
+                                      ? 'Veuillez entrer un email valide'
+                                      : null;
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                onSaved: (newValue) => _email = newValue,
+                              ),
+                            ),
+                          ),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: TextFormField(
+                                initialValue: editingSupp.supplier != null
+                                    ? editingSupp.supplier.tel
+                                    : '',
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey[200],
+                                    ),
+                                  ),
+                                  labelText: 'Tel',
+                                  suffixIcon: Icon(Icons.phone),
+                                ),
+                                validator: (value) {
+                                  return value.isEmpty
+                                      ? 'Veuillez entrer un numéro valide'
+                                      : null;
+                                },
+                                keyboardType: TextInputType.phone,
+                                onSaved: (newValue) => _tel = newValue,
+                              ),
+                            ),
+                          ),
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: Column(
+                                children: <Widget>[
+                                  TextFormField(
+                                    initialValue: editingSupp.supplier != null
+                                        ? editingSupp.supplier.picture
+                                        : '',
+                                    decoration: InputDecoration(
+                                      enabledBorder: UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.grey[200],
+                                        ),
+                                      ),
+                                      labelText: 'Logo',
+                                      hintText: 'Entrez un lien',
+                                      hintStyle: TextStyle(
+                                        fontSize: 12.0,
+                                      ),
+                                      suffixIcon:
+                                          Icon(Icons.picture_in_picture),
+                                    ),
+                                    onSaved: (newValue) => newValue == ""
+                                        ? _picture =
+                                            "images/unknown_supplier.png"
+                                        : _picture = newValue,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 16.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Divider(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        Text(' OU '),
+                                        Expanded(
+                                          child: Divider(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0),
+                                    child: CircleAvatar(
+                                      backgroundColor: Colors.teal[100],
+                                      radius: 25.0,
+                                      child: IconButton(
+                                        icon: Icon(
+                                          Icons.file_upload,
+                                          color: Colors.teal,
+                                          size: 25.0,
+                                        ),
+                                        onPressed: _openFileExplorer,
+                                        iconSize: 50.0,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
             );
           },

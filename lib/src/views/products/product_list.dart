@@ -1,8 +1,10 @@
+import 'package:easy_order/src/models/product/manageProductArguments.dart';
 import 'package:easy_order/src/models/product/productArguments.dart';
 import 'package:easy_order/src/utils/currency_converter.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class ProductList extends StatefulWidget {
   final ProductArguments _products;
@@ -73,7 +75,7 @@ class _ProductListState extends State<ProductList> {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
-                      onTap: null,
+                      onTap: () {},
                       child: Slidable(
                         actionPane: SlidableScrollActionPane(),
                         actionExtentRatio: 0.25,
@@ -92,14 +94,19 @@ class _ProductListState extends State<ProductList> {
                           subtitle: Text(
                             _products.products[i].description,
                           ),
-                          trailing: Icon(Icons.shopping_cart),
+                          trailing: Icon(Icons.add_shopping_cart),
                         ),
                         secondaryActions: <Widget>[
                           IconSlideAction(
                             caption: 'Modifier',
                             color: Colors.grey[200],
                             icon: Icons.edit,
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.pushNamed(context, '/manageProduct',
+                                  arguments: ManageProductArguments(
+                                      _products.products[i],
+                                      _products.supplier));
+                            },
                           ),
                         ],
                       ),
@@ -111,10 +118,28 @@ class _ProductListState extends State<ProductList> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+      floatingActionButton: SpeedDial(
         backgroundColor: Colors.red[400],
-        child: Icon(Icons.add),
+        animatedIcon: AnimatedIcons.add_event,
+        curve: Curves.bounceIn,
+        tooltip: 'Nouveau produit',
+        children: [
+          SpeedDialChild(
+            child: Icon(Icons.note_add),
+            backgroundColor: Colors.green[300],
+            label: 'Via un fichier .csv',
+            onTap: () {},
+          ),
+          SpeedDialChild(
+              child: Icon(Icons.edit),
+              backgroundColor: Colors.blue[400],
+              label: 'Via un formulaire',
+              onTap: () {
+                Navigator.pushNamed(context, '/manageProduct',
+                    arguments:
+                        ManageProductArguments(null, _products.supplier));
+              }),
+        ],
       ),
     );
   }
