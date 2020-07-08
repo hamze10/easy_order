@@ -280,11 +280,7 @@ class _ManageProductFormState extends State<ManageProductForm> {
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16.0, vertical: 8.0),
-                              child: TextFormField(
-                                initialValue: editingProd.product != null
-                                    ? CurrencyConvertor.convert(
-                                        editingProd.product.currency)
-                                    : '',
+                              child: DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
                                     borderSide: BorderSide(
@@ -294,16 +290,28 @@ class _ManageProductFormState extends State<ManageProductForm> {
                                   labelText: 'Devise',
                                   suffixIcon: Icon(Icons.euro_symbol),
                                 ),
-                                validator: (value) {
-                                  return value.isEmpty
-                                      ? 'Veuillez entrer une devise'
-                                      : !CurrencyConvertor.checkIfValidCurrency(
-                                              value)
-                                          ? 'La devise doit être €, \$, MAD ou £'
-                                          : null;
+                                value: editingProd.product != null
+                                    ? CurrencyConvertor.convert(
+                                        editingProd.product.currency)
+                                    : _currency != null
+                                        ? CurrencyConvertor.convert(_currency)
+                                        : '€',
+                                icon: Icon(Icons.arrow_drop_down),
+                                iconSize: 11.0,
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    _currency =
+                                        CurrencyConvertor.toCurrency(newValue);
+                                  });
                                 },
-                                onSaved: (newValue) => _currency =
-                                    CurrencyConvertor.toCurrency(newValue),
+                                items: CurrencyConvertor.allValuesInString()
+                                    .map<DropdownMenuItem<String>>(
+                                        (String val) {
+                                  return DropdownMenuItem<String>(
+                                    value: val,
+                                    child: Text(val),
+                                  );
+                                }).toList(),
                               ),
                             ),
                           ),

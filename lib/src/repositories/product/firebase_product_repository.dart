@@ -69,12 +69,17 @@ class FirebaseProductRepository implements ProductRepository {
     });
   }
 
+  Future<List<String>> _getProducts(String idSupplier) async {
+    DocumentSnapshot snap = await supplierCollection.document(idSupplier).get();
+    return List<String>.from(snap.data['products']);
+  }
+
   @override
-  Stream<List<Product>> products(List<Product> fromSupplier) async* {
+  Stream<List<Product>> products(String idSupplier) async* {
+    List<String> prods = await _getProducts(idSupplier);
     yield* productCollection.snapshots().map((snapshot) {
       return snapshot.documents
-          .where((element) =>
-              fromSupplier.map((e) => e.id).contains(element.documentID))
+          .where((element) => prods.contains(element.documentID))
           .map((e) => Product.fromEntity(ProductEntity.fromSnapshot(e)))
           .toList();
     });

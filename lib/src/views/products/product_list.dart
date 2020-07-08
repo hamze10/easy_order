@@ -1,22 +1,11 @@
 import 'package:easy_order/src/models/product/manageProductArguments.dart';
+import 'package:easy_order/src/models/product/product.dart';
 import 'package:easy_order/src/models/product/productArguments.dart';
 import 'package:easy_order/src/utils/currency_converter.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-
-class ProductList extends StatefulWidget {
-  final ProductArguments _products;
-
-  ProductList({Key key, @required ProductArguments products})
-      : assert(products != null),
-        _products = products,
-        super(key: key);
-
-  @override
-  _ProductListState createState() => _ProductListState();
-}
 
 Widget _leftWidget(BuildContext context) => Padding(
       padding: const EdgeInsets.only(left: 8.0),
@@ -36,6 +25,18 @@ Widget _rightWidget(BuildContext context) => GestureDetector(
         icon: Image.asset('images/icon_shopping_cart.png'),
       ),
     );
+
+class ProductList extends StatefulWidget {
+  final ProductArguments _products;
+
+  ProductList({Key key, @required ProductArguments products})
+      : assert(products != null),
+        _products = products,
+        super(key: key);
+
+  @override
+  _ProductListState createState() => _ProductListState();
+}
 
 class _ProductListState extends State<ProductList> {
   ProductArguments get _products => widget._products;
@@ -81,21 +82,7 @@ class _ProductListState extends State<ProductList> {
                         actionExtentRatio: 0.25,
                         key: Key(_products.products[i].id),
                         controller: _slidableController,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 30.0,
-                            backgroundImage: !_products.products[i].picture
-                                    .startsWith("images/")
-                                ? NetworkImage(_products.products[i].picture)
-                                : AssetImage(_products.products[i].picture),
-                            backgroundColor: Colors.grey[300],
-                          ),
-                          title: Text(_products.products[i].name),
-                          subtitle: Text(
-                            _products.products[i].description,
-                          ),
-                          trailing: Icon(Icons.add_shopping_cart),
-                        ),
+                        child: ListItem(_products.products[i]),
                         secondaryActions: <Widget>[
                           IconSlideAction(
                             caption: 'Modifier',
@@ -142,5 +129,125 @@ class _ProductListState extends State<ProductList> {
         ],
       ),
     );
+  }
+}
+
+class ListItem extends StatefulWidget {
+  final Product product;
+
+  ListItem(this.product);
+
+  @override
+  _ListItemState createState() => _ListItemState();
+}
+
+class _ListItemState extends State<ListItem> {
+  Product get product => widget.product;
+  int _quantity = 1;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Container(
+              width: 100.0,
+              child: Image(
+                height: 80.0,
+                image: !product.picture.startsWith("images/")
+                    ? NetworkImage(product.picture)
+                    : AssetImage(product.picture),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    product.name,
+                    style: TextStyle(
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    product.description,
+                    style: TextStyle(
+                      fontSize: 11.0,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5.0),
+                    child: Text(
+                      product.price.toStringAsFixed(2) +
+                          CurrencyConvertor.convert(product.currency),
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  //Ajouter input pour rentrer la quantité manuellement
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: SliderTheme(
+                      data: SliderThemeData(
+                        trackHeight: 5.0,
+                        trackShape: CustomTrackShape(),
+                        thumbShape:
+                            RoundSliderThumbShape(enabledThumbRadius: 8.0),
+                      ),
+                      child: Slider(
+                        value: _quantity.toDouble(),
+                        min: 1,
+                        max: 100,
+                        label: 'Quantité : $_quantity',
+                        divisions: 100,
+                        activeColor: Colors.red[400],
+                        inactiveColor: Colors.red[50],
+                        onChanged: (double newValue) {
+                          setState(() {
+                            _quantity = newValue.round();
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        GestureDetector(
+          onTap: () {},
+          child: Icon(
+            Icons.add_shopping_cart,
+            size: 35.0,
+            color: Colors.red[600],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class CustomTrackShape extends RoundedRectSliderTrackShape {
+  Rect getPreferredRect({
+    @required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    @required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final double trackHeight = sliderTheme.trackHeight;
+    final double trackLeft = offset.dx;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackWidth = parentBox.size.width / 1.25;
+    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }

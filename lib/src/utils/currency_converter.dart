@@ -45,4 +45,22 @@ class CurrencyConvertor {
         currency == "MAD" ||
         currency == "£";
   }
+
+  static List<String> allValuesInString() {
+    return List<String>.from([
+      '€',
+      '\$',
+      'MAD',
+      '£',
+    ]);
+  }
+
+  static List<Currency> allValuesInCurrency() {
+    return List<Currency>.from([
+      Currency.EURO,
+      Currency.DOLLAR,
+      Currency.DIRHAM,
+      Currency.LIVRE,
+    ]);
+  }
 }

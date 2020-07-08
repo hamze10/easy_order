@@ -73,12 +73,18 @@ class FirebaseSupplierRepository implements SupplierRepository {
     });
   }
 
+  Future<List<String>> _getSupplier(String idEntreprise) async {
+    DocumentSnapshot snap =
+        await entrepriseCollection.document(idEntreprise).get();
+    return List<String>.from(snap.data['suppliers']);
+  }
+
   @override
-  Stream<List<Supplier>> suppliers(List<Supplier> fromEntreprise) async* {
+  Stream<List<Supplier>> suppliers(String idEntreprise) async* {
+    List<String> supp = await _getSupplier(idEntreprise);
     yield* supplierCollection.snapshots().map((snapshot) {
       return snapshot.documents
-          .where((element) =>
-              fromEntreprise.map((e) => e.id).contains(element.documentID))
+          .where((element) => supp.contains(element.documentID))
           .map((e) => Supplier.fromEntity(SupplierEntity.fromSnapshot(e)))
           .toList();
     });

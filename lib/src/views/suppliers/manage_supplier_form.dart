@@ -293,7 +293,7 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
                                           color: Colors.grey[200],
                                         ),
                                       ),
-                                      labelText: 'Logo',
+                                      labelText: 'Photo du fournisseur',
                                       hintText: 'Entrez un lien',
                                       hintStyle: TextStyle(
                                         fontSize: 12.0,

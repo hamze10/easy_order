@@ -37,7 +37,7 @@ class SuppliersBloc extends Bloc<SuppliersEvent, SuppliersState> {
     Entreprise ent = event.entreprise;
     _supplierSubscription?.cancel();
     _supplierSubscription = _supplierRepository
-        .suppliers(event.suppliers)
+        .suppliers(event.entreprise.id)
         .listen((supplier) => add(SuppliersUpdated(supplier, ent)));
   }
 

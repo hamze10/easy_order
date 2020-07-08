@@ -11,7 +11,7 @@ class SupplierScreen extends StatelessWidget {
         ModalRoute.of(context).settings.arguments as SupplierArguments;
 
     BlocProvider.of<SuppliersBloc>(context)
-        .add(LoadSuppliers(suppliers.suppliers, suppliers.entreprise));
+      ..add(LoadSuppliers(suppliers.suppliers, suppliers.entreprise));
 
     return BlocBuilder<SuppliersBloc, SuppliersState>(
       builder: (context, state) {

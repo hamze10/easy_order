@@ -11,7 +11,7 @@ class ProductScreen extends StatelessWidget {
         ModalRoute.of(context).settings.arguments as ProductArguments;
 
     BlocProvider.of<ProductsBloc>(context)
-        .add(LoadProducts(products.products, products.supplier));
+      ..add(LoadProducts(products.products, products.supplier));
 
     return BlocBuilder<ProductsBloc, ProductsState>(
       builder: (context, state) {

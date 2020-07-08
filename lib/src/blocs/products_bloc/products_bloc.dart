@@ -37,7 +37,7 @@ class ProductsBloc extends Bloc<ProductsEvent, ProductsState> {
     Supplier sup = event.supplier;
     _productSubscription?.cancel();
     _productSubscription = _productRepository
-        .products(event.products)
+        .products(event.supplier.id)
         .listen((product) => add(ProductsUpdated(product, sup)));
   }
 

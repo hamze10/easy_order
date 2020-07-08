@@ -5,5 +5,5 @@ abstract class SupplierRepository {
   Future<void> addNewSupplier(Supplier supplier, Entreprise entreprise);
   Future<void> deleteSupplier(Supplier supplier, Entreprise entreprise);
   Future<void> updateSupplier(Supplier supplier);
-  Stream<List<Supplier>> suppliers(List<Supplier> fromEntreprise);
+  Stream<List<Supplier>> suppliers(String idEntreprise);
 }
