@@ -144,6 +144,24 @@ class ListItem extends StatefulWidget {
 class _ListItemState extends State<ListItem> {
   Product get product => widget.product;
   int _quantity = 1;
+  final _quantityController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _quantityController.value = TextEditingValue(
+      text: _quantity.toString(),
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: _quantity.toString().length),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    return _quantityController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,30 +210,59 @@ class _ListItemState extends State<ListItem> {
                     ),
                   ),
                   //Ajouter input pour rentrer la quantité manuellement
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: SliderTheme(
-                      data: SliderThemeData(
-                        trackHeight: 5.0,
-                        trackShape: CustomTrackShape(),
-                        thumbShape:
-                            RoundSliderThumbShape(enabledThumbRadius: 8.0),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        width: 30.0,
+                        height: 25.0,
+                        decoration: BoxDecoration(
+                          color: Colors.red[400],
+                        ),
+                        child: TextFormField(
+                          controller: _quantityController,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
+                          keyboardType: TextInputType.number,
+                          onChanged: (String newValue) {
+                            setState(() {
+                              _quantity = int.parse(newValue);
+                            });
+                          },
+                        ),
                       ),
-                      child: Slider(
-                        value: _quantity.toDouble(),
-                        min: 1,
-                        max: 100,
-                        label: 'Quantité : $_quantity',
-                        divisions: 100,
-                        activeColor: Colors.red[400],
-                        inactiveColor: Colors.red[50],
-                        onChanged: (double newValue) {
-                          setState(() {
-                            _quantity = newValue.round();
-                          });
-                        },
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: SliderTheme(
+                          data: SliderThemeData(
+                            trackHeight: 5.0,
+                            trackShape: CustomTrackShape(),
+                            thumbShape:
+                                RoundSliderThumbShape(enabledThumbRadius: 8.0),
+                          ),
+                          child: Slider(
+                            value: _quantity <= 250 ? _quantity.toDouble() : 1,
+                            min: 1,
+                            max: 250,
+                            label: 'Quantité : $_quantity',
+                            divisions: 50,
+                            activeColor: Colors.red[400],
+                            inactiveColor: Colors.red[50],
+                            onChanged: (double newValue) {
+                              setState(() {
+                                _quantity = newValue.round();
+                                _quantityController.value = TextEditingValue(
+                                  text: _quantity.toString(),
+                                  selection: TextSelection.fromPosition(
+                                    TextPosition(
+                                        offset: _quantity.toString().length),
+                                  ),
+                                );
+                              });
+                            },
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
