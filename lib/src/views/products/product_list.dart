@@ -1,35 +1,17 @@
+import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/models/product/manageProductArguments.dart';
 import 'package:easy_order/src/models/product/product.dart';
-import 'package:easy_order/src/models/product/productArguments.dart';
 import 'package:easy_order/src/utils/currency_converter.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-
-Widget _leftWidget(BuildContext context) => Padding(
-      padding: const EdgeInsets.only(left: 8.0),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: Tab(
-          icon: Image.asset('images/icon_arrow.png'),
-        ),
-      ),
-    );
-
-Widget _rightWidget(BuildContext context) => GestureDetector(
-      onTap: () {},
-      child: Tab(
-        icon: Image.asset('images/icon_shopping_cart.png'),
-      ),
-    );
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class ProductList extends StatefulWidget {
-  final ProductArguments _products;
+  final Order _products;
 
-  ProductList({Key key, @required ProductArguments products})
+  ProductList({Key key, @required Order products})
       : assert(products != null),
         _products = products,
         super(key: key);
@@ -39,8 +21,54 @@ class ProductList extends StatefulWidget {
 }
 
 class _ProductListState extends State<ProductList> {
-  ProductArguments get _products => widget._products;
+  Order get _products => widget._products;
   final SlidableController _slidableController = SlidableController();
+  int _quantity = 1;
+  final _quantityController = TextEditingController();
+  PanelController _pc = PanelController();
+  bool _isOpen = false;
+  List<Order> myOrders = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _quantityController.value = TextEditingValue(
+      text: _quantity.toString(),
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: _quantity.toString().length),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    return _quantityController.dispose();
+  }
+
+  Widget _leftWidget(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.pop(context);
+          },
+          child: Tab(
+            icon: Image.asset('images/icon_arrow.png'),
+          ),
+        ),
+      );
+
+  Widget _rightWidget() => GestureDetector(
+        onTap: () {
+          bool previousOpen = _isOpen;
+          _isOpen = !_isOpen;
+          if (previousOpen) return _pc.close().then((value) => _pc.hide());
+          return _pc.show().then((value) => _pc.open());
+        },
+        child: Tab(
+          icon: Image.asset('images/icon_shopping_cart.png'),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -50,60 +78,76 @@ class _ProductListState extends State<ProductList> {
         gradientBegin: Colors.red[700],
         grandientEnd: Colors.red[300],
         leftWidget: _leftWidget(context),
-        rightWidget: _rightWidget(context),
+        rightWidget: _rightWidget(),
       ),
-      body: Column(
-        children: <Widget>[
-          Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.zero)),
-            margin: EdgeInsets.all(0.0),
-            shadowColor: Colors.grey[50],
-            elevation: 5.0,
-            color: Colors.grey[100],
-            child: ListTile(
-              leading: Icon(Icons.search),
-              title: Text('Recherche..'),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.separated(
-                separatorBuilder: (context, i) => Divider(),
-                itemCount: _products.products.length,
-                itemBuilder: (context, i) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Slidable(
-                        actionPane: SlidableScrollActionPane(),
-                        actionExtentRatio: 0.25,
-                        key: Key(_products.products[i].id),
-                        controller: _slidableController,
-                        child: ListItem(_products.products[i]),
-                        secondaryActions: <Widget>[
-                          IconSlideAction(
-                            caption: 'Modifier',
-                            color: Colors.grey[200],
-                            icon: Icons.edit,
-                            onTap: () {
-                              Navigator.pushNamed(context, '/manageProduct',
-                                  arguments: ManageProductArguments(
-                                      _products.products[i],
-                                      _products.supplier));
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+      body: SlidingUpPanel(
+        backdropEnabled: true,
+        backdropOpacity: 0.7,
+        onPanelClosed: () => _isOpen = !_isOpen,
+        onPanelOpened: () => _isOpen = !_isOpen,
+        minHeight: 0,
+        controller: _pc,
+        panel: Center(
+          child: Text('test sliding'),
+        ),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24.0),
+          topRight: Radius.circular(24.0),
+        ),
+        body: Column(
+          children: <Widget>[
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.zero)),
+              margin: EdgeInsets.all(0.0),
+              shadowColor: Colors.grey[50],
+              elevation: 5.0,
+              color: Colors.grey[100],
+              child: ListTile(
+                leading: Icon(Icons.search),
+                title: Text('Recherche..'),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.separated(
+                  separatorBuilder: (context, i) => Divider(),
+                  itemCount: _products.fromSupplier.length,
+                  itemBuilder: (context, i) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {},
+                        child: Slidable(
+                          actionPane: SlidableScrollActionPane(),
+                          actionExtentRatio: 0.25,
+                          key: Key(_products.fromSupplier[i].id),
+                          controller: _slidableController,
+                          child:
+                              _listItem(_products.fromSupplier[i], _products),
+                          secondaryActions: <Widget>[
+                            IconSlideAction(
+                              caption: 'Modifier',
+                              color: Colors.grey[200],
+                              icon: Icons.edit,
+                              onTap: () {
+                                Navigator.pushNamed(context, '/manageProduct',
+                                    arguments: ManageProductArguments(
+                                        _products.fromSupplier[i],
+                                        _products.supplier));
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: SpeedDial(
         backgroundColor: Colors.red[400],
@@ -130,50 +174,16 @@ class _ProductListState extends State<ProductList> {
       ),
     );
   }
-}
 
-class ListItem extends StatefulWidget {
-  final Product product;
-
-  ListItem(this.product);
-
-  @override
-  _ListItemState createState() => _ListItemState();
-}
-
-class _ListItemState extends State<ListItem> {
-  Product get product => widget.product;
-  int _quantity = 1;
-  final _quantityController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _quantityController.value = TextEditingValue(
-      text: _quantity.toString(),
-      selection: TextSelection.fromPosition(
-        TextPosition(offset: _quantity.toString().length),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    return _quantityController.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _listItem(Product product, Order order) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Row(
           children: <Widget>[
             Container(
-              width: 100.0,
+              width: 80.0,
               child: Image(
-                height: 80.0,
                 image: !product.picture.startsWith("images/")
                     ? NetworkImage(product.picture)
                     : AssetImage(product.picture),
@@ -270,7 +280,16 @@ class _ListItemState extends State<ListItem> {
           ],
         ),
         GestureDetector(
-          onTap: () {},
+          onTap: () {
+            Order orderWithQuantity =
+                order.copyWith(product: product, quantity: _quantity);
+            List<String> productsId =
+                myOrders.map((e) => e.product.id).toList();
+            if (!productsId.contains(orderWithQuantity.product.id)) {
+              myOrders.add(orderWithQuantity);
+            }
+            print("myorders : ${myOrders.length}");
+          },
           child: Icon(
             Icons.add_shopping_cart,
             size: 35.0,

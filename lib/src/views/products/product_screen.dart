@@ -1,5 +1,5 @@
 import 'package:easy_order/src/blocs/products_bloc/products_bloc.dart';
-import 'package:easy_order/src/models/product/productArguments.dart';
+import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/views/products/product_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,11 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ProductScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ProductArguments products =
-        ModalRoute.of(context).settings.arguments as ProductArguments;
+    final Order products = ModalRoute.of(context).settings.arguments as Order;
 
     BlocProvider.of<ProductsBloc>(context)
-      ..add(LoadProducts(products.products, products.supplier));
+      ..add(LoadProducts(products.fromSupplier, products.supplier));
 
     return BlocBuilder<ProductsBloc, ProductsState>(
       builder: (context, state) {
@@ -34,7 +33,8 @@ class ProductScreen extends StatelessWidget {
           );
         } else if (state is ProductsLoadSuccess) {
           return ProductList(
-            products: ProductArguments(state.products, state.supplier),
+            products: products.copyWith(
+                fromSupplier: state.products, supplier: state.supplier),
           );
         } else {
           return Container();

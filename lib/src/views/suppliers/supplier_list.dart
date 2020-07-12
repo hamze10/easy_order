@@ -1,14 +1,13 @@
-import 'package:easy_order/src/models/product/productArguments.dart';
+import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/models/suppliers/manageSupplierArguments.dart';
-import 'package:easy_order/src/models/suppliers/supplierArguments.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class SupplierList extends StatefulWidget {
-  final SupplierArguments _suppliers;
+  final Order _suppliers;
 
-  SupplierList({Key key, @required SupplierArguments suppliers})
+  SupplierList({Key key, @required Order suppliers})
       : assert(suppliers != null),
         _suppliers = suppliers,
         super(key: key);
@@ -30,7 +29,7 @@ Widget _leftWidget(BuildContext context) => Padding(
     );
 
 class _SupplierListState extends State<SupplierList> {
-  SupplierArguments get _suppliers => widget._suppliers;
+  Order get _suppliers => widget._suppliers;
   final SlidableController _slidableController = SlidableController();
 
   @override
@@ -61,7 +60,7 @@ class _SupplierListState extends State<SupplierList> {
               padding: const EdgeInsets.all(8.0),
               child: ListView.separated(
                 separatorBuilder: (context, i) => Divider(),
-                itemCount: _suppliers.suppliers.length,
+                itemCount: _suppliers.fromEntreprise.length,
                 itemBuilder: (context, i) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -70,30 +69,37 @@ class _SupplierListState extends State<SupplierList> {
                         Navigator.pushNamed(
                           context,
                           '/products',
-                          arguments: ProductArguments(
-                            _suppliers.suppliers[i].products,
-                            _suppliers.suppliers[i],
-                          ),
+                          arguments: _suppliers.copyWith(
+                              fromSupplier:
+                                  _suppliers.fromEntreprise[i].products,
+                              supplier: _suppliers.fromEntreprise[
+                                  i]), /*ProductArguments(
+                            _suppliers.fromEntreprise[i].products,
+                            _suppliers.fromEntreprise[i],
+                          ),*/
                         );
                       },
                       child: Slidable(
                         actionPane: SlidableScrollActionPane(),
                         actionExtentRatio: 0.25,
-                        key: Key(_suppliers.suppliers[i].id),
+                        key: Key(_suppliers.fromEntreprise[i].id),
                         controller: _slidableController,
                         child: ListTile(
                           leading: CircleAvatar(
                             radius: 30.0,
-                            backgroundImage: !_suppliers.suppliers[i].picture
+                            backgroundImage: !_suppliers
+                                    .fromEntreprise[i].picture
                                     .startsWith("images/")
-                                ? NetworkImage(_suppliers.suppliers[i].picture)
-                                : AssetImage(_suppliers.suppliers[i].picture),
+                                ? NetworkImage(
+                                    _suppliers.fromEntreprise[i].picture)
+                                : AssetImage(
+                                    _suppliers.fromEntreprise[i].picture),
                             backgroundColor: Colors.grey[300],
                           ),
-                          title: Text(_suppliers.suppliers[i].name),
-                          subtitle: Text(_suppliers.suppliers[i].email +
+                          title: Text(_suppliers.fromEntreprise[i].name),
+                          subtitle: Text(_suppliers.fromEntreprise[i].email +
                               " · " +
-                              _suppliers.suppliers[i].tel),
+                              _suppliers.fromEntreprise[i].tel),
                         ),
                         secondaryActions: <Widget>[
                           IconSlideAction(
@@ -103,7 +109,7 @@ class _SupplierListState extends State<SupplierList> {
                             onTap: () {
                               Navigator.pushNamed(context, '/manageSupplier',
                                   arguments: ManageSupplierArguments(
-                                      _suppliers.suppliers[i],
+                                      _suppliers.fromEntreprise[i],
                                       _suppliers.entreprise));
                             },
                           ),

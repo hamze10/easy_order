@@ -1,6 +1,6 @@
 import 'package:easy_order/src/blocs/authentication_bloc/authentication_bloc.dart';
 import 'package:easy_order/src/models/entreprise/entreprise.dart';
-import 'package:easy_order/src/models/suppliers/supplierArguments.dart';
+import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,6 +38,7 @@ Widget _leftWidget(GlobalKey<ScaffoldState> key) => Padding(
 
 class _EntrepriseListState extends State<EntrepriseList> {
   List<Entreprise> get _entreprises => widget._entreprise;
+  String get _name => widget._displayName;
   final SlidableController _slidableController = SlidableController();
   GlobalKey<ScaffoldState> _key = GlobalKey();
 
@@ -122,10 +123,18 @@ class _EntrepriseListState extends State<EntrepriseList> {
                         Navigator.pushNamed(
                           context,
                           '/suppliers',
-                          arguments: SupplierArguments(
+                          arguments: Order(
+                            nameUser: _name,
+                            entreprise: _entreprises[i],
+                            fromEntreprise: _entreprises[i].suppliers,
+                            supplier: null,
+                            fromSupplier: null,
+                            product: null,
+                            quantity: -1,
+                          ), /*SupplierArguments(
                             _entreprises[i].suppliers,
                             _entreprises[i],
-                          ),
+                          ),*/
                         );
                       },
                       child: Slidable(

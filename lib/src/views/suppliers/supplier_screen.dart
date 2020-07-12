@@ -1,5 +1,5 @@
 import 'package:easy_order/src/blocs/suppliers_bloc/suppliers_bloc.dart';
-import 'package:easy_order/src/models/suppliers/supplierArguments.dart';
+import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/views/suppliers/supplier_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,11 +7,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SupplierScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final SupplierArguments suppliers =
-        ModalRoute.of(context).settings.arguments as SupplierArguments;
+    final Order suppliers = ModalRoute.of(context).settings.arguments as Order;
 
     BlocProvider.of<SuppliersBloc>(context)
-      ..add(LoadSuppliers(suppliers.suppliers, suppliers.entreprise));
+      ..add(LoadSuppliers(suppliers.fromEntreprise, suppliers.entreprise));
 
     return BlocBuilder<SuppliersBloc, SuppliersState>(
       builder: (context, state) {
@@ -34,7 +33,8 @@ class SupplierScreen extends StatelessWidget {
           );
         } else if (state is SuppliersLoadSuccess) {
           return SupplierList(
-            suppliers: SupplierArguments(state.suppliers, state.entreprise),
+            suppliers: suppliers.copyWith(
+                fromEntreprise: state.suppliers, entreprise: state.entreprise),
           );
         } else {
           return Container();
