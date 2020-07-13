@@ -23,28 +23,9 @@ class ProductList extends StatefulWidget {
 class _ProductListState extends State<ProductList> {
   Order get _products => widget._products;
   final SlidableController _slidableController = SlidableController();
-  int _quantity = 1;
-  final _quantityController = TextEditingController();
   PanelController _pc = PanelController();
   bool _isOpen = false;
   List<Order> myOrders = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _quantityController.value = TextEditingValue(
-      text: _quantity.toString(),
-      selection: TextSelection.fromPosition(
-        TextPosition(offset: _quantity.toString().length),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    return _quantityController.dispose();
-  }
 
   Widget _leftWidget(BuildContext context) => Padding(
         padding: const EdgeInsets.only(left: 8.0),
@@ -70,6 +51,15 @@ class _ProductListState extends State<ProductList> {
         ),
       );
 
+  callBack(Order orderWithQuantity) {
+    setState(() {
+      List<String> productsId = myOrders.map((e) => e.product.id).toList();
+      if (!productsId.contains(orderWithQuantity.product.id)) {
+        myOrders.add(orderWithQuantity);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +78,7 @@ class _ProductListState extends State<ProductList> {
         minHeight: 0,
         controller: _pc,
         panel: Center(
-          child: Text('test sliding'),
+          child: Text('test sliding :'),
         ),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.0),
@@ -124,8 +114,11 @@ class _ProductListState extends State<ProductList> {
                           actionExtentRatio: 0.25,
                           key: Key(_products.fromSupplier[i].id),
                           controller: _slidableController,
-                          child:
-                              _listItem(_products.fromSupplier[i], _products),
+                          child: ListItem(
+                            _products.fromSupplier[i],
+                            _products,
+                            callBack,
+                          ),
                           secondaryActions: <Widget>[
                             IconSlideAction(
                               caption: 'Modifier',
@@ -174,8 +167,44 @@ class _ProductListState extends State<ProductList> {
       ),
     );
   }
+}
 
-  Widget _listItem(Product product, Order order) {
+class ListItem extends StatefulWidget {
+  final Product product;
+  final Order order;
+  final Function(Order) callback;
+
+  ListItem(this.product, this.order, this.callback);
+
+  @override
+  _ListItemState createState() => _ListItemState();
+}
+
+class _ListItemState extends State<ListItem> {
+  Product get product => widget.product;
+  Order get order => widget.order;
+  int _quantity = 1;
+  final _quantityController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _quantityController.value = TextEditingValue(
+      text: _quantity.toString(),
+      selection: TextSelection.fromPosition(
+        TextPosition(offset: _quantity.toString().length),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    return _quantityController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -283,12 +312,12 @@ class _ProductListState extends State<ProductList> {
           onTap: () {
             Order orderWithQuantity =
                 order.copyWith(product: product, quantity: _quantity);
-            List<String> productsId =
+            widget.callback(orderWithQuantity);
+            /*List<String> productsId =
                 myOrders.map((e) => e.product.id).toList();
             if (!productsId.contains(orderWithQuantity.product.id)) {
               myOrders.add(orderWithQuantity);
-            }
-            print("myorders : ${myOrders.length}");
+            }*/
           },
           child: Icon(
             Icons.add_shopping_cart,
