@@ -42,7 +42,10 @@ class _ProductListState extends State<ProductList> {
   Widget _rightWidget() => GestureDetector(
         onTap: () {
           bool previousOpen = _isOpen;
-          _isOpen = !_isOpen;
+          setState(() {
+            _isOpen = !_isOpen;
+          });
+
           if (previousOpen) return _pc.close().then((value) => _pc.hide());
           return _pc.show().then((value) => _pc.open());
         },
@@ -51,12 +54,21 @@ class _ProductListState extends State<ProductList> {
         ),
       );
 
-  callBack(Order orderWithQuantity) {
+  bool addToCart(Order orderWithQuantity) {
+    bool result = false;
     setState(() {
       List<String> productsId = myOrders.map((e) => e.product.id).toList();
       if (!productsId.contains(orderWithQuantity.product.id)) {
         myOrders.add(orderWithQuantity);
+        result = true;
       }
+    });
+    return result;
+  }
+
+  void removeToCart(Order order) {
+    setState(() {
+      myOrders.remove(order);
     });
   }
 
@@ -73,13 +85,19 @@ class _ProductListState extends State<ProductList> {
       body: SlidingUpPanel(
         backdropEnabled: true,
         backdropOpacity: 0.7,
-        onPanelClosed: () => _isOpen = !_isOpen,
-        onPanelOpened: () => _isOpen = !_isOpen,
+        onPanelClosed: () {
+          setState(() {
+            _isOpen = !_isOpen;
+          });
+        },
+        onPanelOpened: () {
+          setState(() {
+            _isOpen = !_isOpen;
+          });
+        },
         minHeight: 0,
         controller: _pc,
-        panel: Center(
-          child: Text('test sliding :'),
-        ),
+        panel: OrderPanel(myOrders, removeToCart),
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24.0),
           topRight: Radius.circular(24.0),
@@ -117,7 +135,7 @@ class _ProductListState extends State<ProductList> {
                           child: ListItem(
                             _products.fromSupplier[i],
                             _products,
-                            callBack,
+                            addToCart,
                           ),
                           secondaryActions: <Widget>[
                             IconSlideAction(
@@ -143,6 +161,7 @@ class _ProductListState extends State<ProductList> {
         ),
       ),
       floatingActionButton: SpeedDial(
+        visible: !_isOpen,
         backgroundColor: Colors.red[400],
         animatedIcon: AnimatedIcons.add_event,
         curve: Curves.bounceIn,
@@ -312,17 +331,22 @@ class _ListItemState extends State<ListItem> {
           onTap: () {
             Order orderWithQuantity =
                 order.copyWith(product: product, quantity: _quantity);
-            widget.callback(orderWithQuantity);
-            /*List<String> productsId =
-                myOrders.map((e) => e.product.id).toList();
-            if (!productsId.contains(orderWithQuantity.product.id)) {
-              myOrders.add(orderWithQuantity);
-            }*/
+            bool value = widget.callback(orderWithQuantity);
+            String text = value
+                ? 'Produit ajouté au panier.'
+                : 'Produit déjà dans le panier.';
+            Scaffold.of(context).showSnackBar(
+              SnackBar(
+                content: Text(text),
+                backgroundColor: value ? Colors.green[400] : Colors.red[400],
+                duration: Duration(milliseconds: 800),
+              ),
+            );
           },
           child: Icon(
             Icons.add_shopping_cart,
             size: 35.0,
-            color: Colors.red[600],
+            color: Colors.green[600],
           ),
         ),
       ],
@@ -344,5 +368,95 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
         offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackWidth = parentBox.size.width / 1.25;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+  }
+}
+
+class OrderPanel extends StatelessWidget {
+  final List<Order> orders;
+  final Function(Order) callback;
+
+  OrderPanel(this.orders, this.callback);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0, top: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, bottom: 24.0),
+            child: Text(
+              'Mes Commandes',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 30.0,
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.separated(
+              separatorBuilder: (context, i) => Divider(),
+              itemCount: orders.length,
+              itemBuilder: (context, i) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    backgroundImage:
+                        !orders[i].product.picture.startsWith("images/")
+                            ? NetworkImage(orders[i].product.picture)
+                            : AssetImage(orders[i].product.picture),
+                  ),
+                  title: Text(orders[i].product.name),
+                  subtitle: Text('Quantité : ${orders[i].quantity}'),
+                  trailing: IconButton(
+                    icon: Icon(
+                      Icons.remove_shopping_cart,
+                      color: Colors.red[500],
+                    ),
+                    onPressed: () {
+                      callback(orders[i]);
+                    },
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                orders.length > 0
+                    ? 'Total : ${orders.fold(0, (previousValue, element) => previousValue + (element.product.price * element.quantity))}${CurrencyConvertor.convert(orders.first.product.currency)}'
+                    : '',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16.0, top: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {},
+                  child: Text('Envoyer par sms'),
+                  color: Colors.red[200],
+                ),
+                RaisedButton(
+                  onPressed: () {},
+                  child: Text('Envoyer par email'),
+                  color: Colors.red[200],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
