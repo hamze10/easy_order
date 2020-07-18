@@ -103,9 +103,15 @@ class _SupplierListState extends State<SupplierList> {
                         ),
                         secondaryActions: <Widget>[
                           IconSlideAction(
-                            caption: 'Modifier',
-                            color: Colors.grey[200],
-                            icon: Icons.edit,
+                            color: Colors.transparent,
+                            foregroundColor: Colors.black,
+                            iconWidget: CircleAvatar(
+                              backgroundColor: Colors.orange[400],
+                              child: Icon(
+                                Icons.edit,
+                                color: Colors.white,
+                              ),
+                            ),
                             onTap: () {
                               Navigator.pushNamed(context, '/manageSupplier',
                                   arguments: ManageSupplierArguments(

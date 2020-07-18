@@ -304,6 +304,8 @@ class _ManageProductFormState extends State<ManageProductForm> {
                                         CurrencyConvertor.toCurrency(newValue);
                                   });
                                 },
+                                onSaved: (String newValue) => _currency =
+                                    CurrencyConvertor.toCurrency(newValue),
                                 items: CurrencyConvertor.allValuesInString()
                                     .map<DropdownMenuItem<String>>(
                                         (String val) {

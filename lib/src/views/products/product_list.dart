@@ -139,9 +139,15 @@ class _ProductListState extends State<ProductList> {
                           ),
                           secondaryActions: <Widget>[
                             IconSlideAction(
-                              caption: 'Modifier',
-                              color: Colors.grey[200],
-                              icon: Icons.edit,
+                              color: Colors.transparent,
+                              foregroundColor: Colors.black,
+                              iconWidget: CircleAvatar(
+                                backgroundColor: Colors.orange[400],
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                              ),
                               onTap: () {
                                 Navigator.pushNamed(context, '/manageProduct',
                                     arguments: ManageProductArguments(
@@ -174,14 +180,14 @@ class _ProductListState extends State<ProductList> {
             onTap: () {},
           ),
           SpeedDialChild(
-              child: Icon(Icons.edit),
-              backgroundColor: Colors.blue[400],
-              label: 'Via un formulaire',
-              onTap: () {
-                Navigator.pushNamed(context, '/manageProduct',
-                    arguments:
-                        ManageProductArguments(null, _products.supplier));
-              }),
+            child: Icon(Icons.edit),
+            backgroundColor: Colors.blue[400],
+            label: 'Via un formulaire',
+            onTap: () {
+              Navigator.pushNamed(context, '/manageProduct',
+                  arguments: ManageProductArguments(null, _products.supplier));
+            },
+          ),
         ],
       ),
     );
