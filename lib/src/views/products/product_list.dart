@@ -1,9 +1,11 @@
+import 'package:badges/badges.dart';
 import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/models/product/manageProductArguments.dart';
 import 'package:easy_order/src/models/product/product.dart';
 import 'package:easy_order/src/utils/currency_converter.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
@@ -40,18 +42,27 @@ class _ProductListState extends State<ProductList> {
         ),
       );
 
-  Widget _rightWidget() => GestureDetector(
-        onTap: () {
-          bool previousOpen = _isOpen;
-          setState(() {
-            _isOpen = !_isOpen;
-          });
+  Widget _rightWidget() => Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: GestureDetector(
+          onTap: () {
+            bool previousOpen = _isOpen;
+            setState(() {
+              _isOpen = !_isOpen;
+            });
 
-          if (previousOpen) return _pc.close().then((value) => _pc.hide());
-          return _pc.show().then((value) => _pc.open());
-        },
-        child: Tab(
-          icon: Image.asset('images/icon_shopping_cart.png'),
+            if (previousOpen) return _pc.close().then((value) => _pc.hide());
+            return _pc.show().then((value) => _pc.open());
+          },
+          child: Badge(
+            animationType: BadgeAnimationType.slide,
+            badgeColor: Colors.green[200],
+            position: BadgePosition.bottomLeft(),
+            badgeContent: Text(myOrders.length.toString()),
+            child: Tab(
+              icon: Image.asset('images/icon_shopping_cart2.png'),
+            ),
+          ),
         ),
       );
 
@@ -349,7 +360,7 @@ class _ListItemState extends State<ListItem> {
             Scaffold.of(context).showSnackBar(
               SnackBar(
                 content: Text(text),
-                backgroundColor: value ? Colors.green[400] : Colors.red[400],
+                backgroundColor: value ? Colors.green[600] : Colors.red[400],
                 duration: Duration(milliseconds: 800),
               ),
             );
@@ -454,41 +465,73 @@ class OrderPanel extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: () {
-                    String _allOrders = '';
-                    orders.forEach((element) => _allOrders += element.toSend());
-                    final Uri _smsLaunch = Uri(
-                      scheme: 'sms',
-                      path: orders.first.supplier.tel,
-                      queryParameters: {
-                        'body':
-                            'Commande de ${orders.first.entreprise.name} : $_allOrders',
-                      },
-                    );
+                  onPressed: orders.length == 0
+                      ? null
+                      : () {
+                          String _allOrders = '';
+                          orders.forEach(
+                              (element) => _allOrders += element.toSend());
+                          final Uri _smsLaunch = Uri(
+                            scheme: 'sms',
+                            path: orders.first.supplier.tel,
+                            queryParameters: {
+                              'body':
+                                  'Commande de ${orders.first.entreprise.name} : $_allOrders',
+                            },
+                          );
 
-                    launch(_smsLaunch.toString());
-                  },
-                  child: Text('Envoyer par sms'),
-                  color: Colors.red[200],
+                          launch(_smsLaunch.toString());
+                        },
+                  child: Text(
+                    'Envoyer par sms',
+                    style: TextStyle(fontSize: 11.0),
+                  ),
+                  color: Colors.orange[200],
                 ),
                 RaisedButton(
-                  onPressed: () {
-                    String _allOrders = '';
-                    orders.forEach((element) => _allOrders += element.toSend());
-                    final Uri _emailLaunch = Uri(
-                      scheme: 'mailto',
-                      path: orders.first.supplier.email,
-                      queryParameters: {
-                        'subject':
-                            'Commande de ${orders.first.entreprise.name}',
-                        'body': _allOrders,
-                      },
-                    );
+                  onPressed: orders.length == 0
+                      ? null
+                      : () {
+                          String _allOrders = '';
+                          orders.forEach(
+                              (element) => _allOrders += element.toSend());
+                          final Uri _emailLaunch = Uri(
+                            scheme: 'mailto',
+                            path: orders.first.supplier.email,
+                            queryParameters: {
+                              'subject':
+                                  'Commande de ${orders.first.entreprise.name}',
+                              'body': _allOrders,
+                            },
+                          );
 
-                    launch(_emailLaunch.toString());
-                  },
-                  child: Text('Envoyer par email'),
-                  color: Colors.red[200],
+                          launch(_emailLaunch.toString());
+                        },
+                  child: Text(
+                    'Envoyer par email',
+                    style: TextStyle(fontSize: 11.0),
+                  ),
+                  color: Colors.blue[200],
+                ),
+                RaisedButton(
+                  onPressed: orders.length == 0
+                      ? null
+                      : () {
+                          String _allOrders = '';
+                          String _telSupplier =
+                              orders.first.supplier.tel.startsWith("+")
+                                  ? orders.first.supplier.tel
+                                  : "+32${orders.first.supplier.tel}";
+                          orders.forEach(
+                              (element) => _allOrders += element.toSend());
+                          FlutterOpenWhatsapp.sendSingleMessage(
+                              _telSupplier, _allOrders);
+                        },
+                  child: Text(
+                    'Envoyer par WhatsApp',
+                    style: TextStyle(fontSize: 9.0),
+                  ),
+                  color: Colors.green[400],
                 ),
               ],
             ),
