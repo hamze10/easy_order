@@ -193,7 +193,10 @@ class _ProductListState extends State<ProductList> {
             child: Icon(Icons.note_add),
             backgroundColor: Colors.green[300],
             label: 'Via un fichier .csv',
-            onTap: () {},
+            onTap: () {
+              Navigator.pushNamed(context, '/csvProduct',
+                  arguments: ManageProductArguments(null, _products.supplier));
+            },
           ),
           SpeedDialChild(
             child: Icon(Icons.edit),

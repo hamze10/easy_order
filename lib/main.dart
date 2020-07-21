@@ -9,6 +9,7 @@ import 'package:easy_order/src/repositories/user/user_repository.dart';
 import 'package:easy_order/src/views/entreprise/entreprise_screen.dart';
 import 'package:easy_order/src/views/entreprise/manage_entreprise_screen.dart';
 import 'package:easy_order/src/views/login/login_screen.dart';
+import 'package:easy_order/src/views/products/csv_product_screen.dart';
 import 'package:easy_order/src/views/products/manage_product_screen.dart';
 import 'package:easy_order/src/views/products/product_screen.dart';
 import 'package:easy_order/src/views/splash_screen.dart';
@@ -113,6 +114,9 @@ class App extends StatelessWidget {
             productRepository: _productRepository,
           );
         },
+        '/csvProduct': (context) {
+          return CSVProductScreen(_productRepository);
+        }
       },
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
