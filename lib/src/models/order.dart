@@ -41,6 +41,10 @@ class Order {
     );
   }
 
+  String toSend() {
+    return '[${product.name} - quantité: $quantity], ';
+  }
+
   @override
   String toString() =>
       'Order {nameUser : $nameUser, entreprise : $entreprise, fromEntreprise : $fromEntreprise, supplier : $supplier, fromSupplier : $fromSupplier, product : $product, quantity : $quantity }';

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProductList extends StatefulWidget {
   final Order _products;
@@ -82,89 +83,93 @@ class _ProductListState extends State<ProductList> {
         leftWidget: _leftWidget(context),
         rightWidget: _rightWidget(),
       ),
-      body: SlidingUpPanel(
-        backdropEnabled: true,
-        backdropOpacity: 0.7,
-        onPanelClosed: () {
-          setState(() {
-            _isOpen = !_isOpen;
-          });
-        },
-        onPanelOpened: () {
-          setState(() {
-            _isOpen = !_isOpen;
-          });
-        },
-        minHeight: 0,
-        controller: _pc,
-        panel: OrderPanel(myOrders, removeToCart),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24.0),
-          topRight: Radius.circular(24.0),
-        ),
-        body: Column(
-          children: <Widget>[
-            Card(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.zero)),
-              margin: EdgeInsets.all(0.0),
-              shadowColor: Colors.grey[50],
-              elevation: 5.0,
-              color: Colors.grey[100],
-              child: ListTile(
-                leading: Icon(Icons.search),
-                title: Text('Recherche..'),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListView.separated(
-                  separatorBuilder: (context, i) => Divider(),
-                  itemCount: _products.fromSupplier.length,
-                  itemBuilder: (context, i) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Slidable(
-                          actionPane: SlidableScrollActionPane(),
-                          actionExtentRatio: 0.25,
-                          key: Key(_products.fromSupplier[i].id),
-                          controller: _slidableController,
-                          child: ListItem(
-                            _products.fromSupplier[i],
-                            _products,
-                            addToCart,
-                          ),
-                          secondaryActions: <Widget>[
-                            IconSlideAction(
-                              color: Colors.transparent,
-                              foregroundColor: Colors.black,
-                              iconWidget: CircleAvatar(
-                                backgroundColor: Colors.orange[400],
-                                child: Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.pushNamed(context, '/manageProduct',
-                                    arguments: ManageProductArguments(
-                                        _products.fromSupplier[i],
-                                        _products.supplier));
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+      body: Stack(
+        children: <Widget>[
+          Column(
+            children: <Widget>[
+              Card(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.zero)),
+                margin: EdgeInsets.all(0.0),
+                shadowColor: Colors.grey[50],
+                elevation: 5.0,
+                color: Colors.grey[100],
+                child: ListTile(
+                  leading: Icon(Icons.search),
+                  title: Text('Recherche..'),
                 ),
               ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListView.separated(
+                    separatorBuilder: (context, i) => Divider(),
+                    itemCount: _products.fromSupplier.length,
+                    itemBuilder: (context, i) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: Slidable(
+                            actionPane: SlidableScrollActionPane(),
+                            actionExtentRatio: 0.25,
+                            key: Key(_products.fromSupplier[i].id),
+                            controller: _slidableController,
+                            child: ListItem(
+                              _products.fromSupplier[i],
+                              _products,
+                              addToCart,
+                            ),
+                            secondaryActions: <Widget>[
+                              IconSlideAction(
+                                color: Colors.transparent,
+                                foregroundColor: Colors.black,
+                                iconWidget: CircleAvatar(
+                                  backgroundColor: Colors.orange[400],
+                                  child: Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.pushNamed(context, '/manageProduct',
+                                      arguments: ManageProductArguments(
+                                          _products.fromSupplier[i],
+                                          _products.supplier));
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SlidingUpPanel(
+            backdropEnabled: true,
+            backdropOpacity: 0.7,
+            onPanelClosed: () {
+              setState(() {
+                _isOpen = !_isOpen;
+              });
+            },
+            onPanelOpened: () {
+              setState(() {
+                _isOpen = !_isOpen;
+              });
+            },
+            minHeight: 0,
+            controller: _pc,
+            panel: OrderPanel(myOrders, removeToCart),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(24.0),
+              topRight: Radius.circular(24.0),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       floatingActionButton: SpeedDial(
         visible: !_isOpen,
@@ -449,12 +454,39 @@ class OrderPanel extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    String _allOrders = '';
+                    orders.forEach((element) => _allOrders += element.toSend());
+                    final Uri _smsLaunch = Uri(
+                      scheme: 'sms',
+                      path: orders.first.supplier.tel,
+                      queryParameters: {
+                        'body':
+                            'Commande de ${orders.first.entreprise.name} : $_allOrders',
+                      },
+                    );
+
+                    launch(_smsLaunch.toString());
+                  },
                   child: Text('Envoyer par sms'),
                   color: Colors.red[200],
                 ),
                 RaisedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    String _allOrders = '';
+                    orders.forEach((element) => _allOrders += element.toSend());
+                    final Uri _emailLaunch = Uri(
+                      scheme: 'mailto',
+                      path: orders.first.supplier.email,
+                      queryParameters: {
+                        'subject':
+                            'Commande de ${orders.first.entreprise.name}',
+                        'body': _allOrders,
+                      },
+                    );
+
+                    launch(_emailLaunch.toString());
+                  },
                   child: Text('Envoyer par email'),
                   color: Colors.red[200],
                 ),
