@@ -73,6 +73,11 @@ class _LoginFormState extends State<LoginForm> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(10.0),
+            ),
+          ),
           title: Text('Inscription'),
           content: SingleChildScrollView(
             child: ListBody(

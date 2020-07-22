@@ -34,7 +34,51 @@ class _ProductListState extends State<ProductList> {
         padding: const EdgeInsets.only(left: 8.0),
         child: GestureDetector(
           onTap: () {
-            Navigator.pop(context);
+            if (myOrders.isEmpty) {
+              Navigator.pop(context);
+            } else {
+              showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.0),
+                        ),
+                      ),
+                      title: Row(
+                        children: <Widget>[
+                          Icon(Icons.warning),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text("Attention !"),
+                          ),
+                        ],
+                      ),
+                      content: Text(
+                        "Si vous quittez cette page, votre commande sera perdue. Voulez-vous vraiment quitter cette page ?",
+                      ),
+                      actions: [
+                        FlatButton(
+                          child: Text("Non"),
+                          onPressed: () {
+                            Navigator.pop(context, false);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text("Oui"),
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                        ),
+                      ],
+                    );
+                  }).then((value) {
+                if (value == true) {
+                  Navigator.pop(context);
+                }
+              });
+            }
           },
           child: Tab(
             icon: Image.asset('images/icon_arrow.png'),

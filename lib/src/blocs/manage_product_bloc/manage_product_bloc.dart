@@ -27,6 +27,8 @@ class ManageProductBloc extends Bloc<ManageProductEvent, ManageProductState> {
   ) async* {
     if (event is AddProduct) {
       yield* _mapAddProductToState(event);
+    } else if (event is AddMultipleProduct) {
+      yield* _mapAddMultipleProductToState(event);
     } else if (event is UpdateProduct) {
       yield* _mapUpdateProductToState(event);
     } else if (event is DeleteProduct) {
@@ -38,6 +40,18 @@ class ManageProductBloc extends Bloc<ManageProductEvent, ManageProductState> {
     yield ManageProductState.loading();
     try {
       await _productRepository.addProduct(event.product, event.supplier);
+      yield ManageProductState.success();
+    } catch (_) {
+      yield ManageProductState.failure();
+    }
+  }
+
+  Stream<ManageProductState> _mapAddMultipleProductToState(
+      AddMultipleProduct event) async* {
+    yield ManageProductState.loading();
+    try {
+      await _productRepository.addMultipleProduct(
+          event.products, event.supplier);
       yield ManageProductState.success();
     } catch (_) {
       yield ManageProductState.failure();

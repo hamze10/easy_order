@@ -94,6 +94,11 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
                     title: Text("Suppression"),
                     content: Text(
                         "Voulez-vous vraiment supprimer ce fournisseur ? "),

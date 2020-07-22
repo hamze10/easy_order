@@ -95,6 +95,11 @@ class _ManageProductFormState extends State<ManageProductForm> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
                     title: Text("Suppression"),
                     content:
                         Text("Voulez-vous vraiment supprimer ce produit ? "),

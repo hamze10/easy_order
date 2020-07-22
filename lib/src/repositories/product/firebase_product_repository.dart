@@ -54,6 +54,14 @@ class FirebaseProductRepository implements ProductRepository {
   }
 
   @override
+  Future<void> addMultipleProduct(
+      List<Product> products, Supplier supplier) async {
+    for (Product product in products) {
+      await this.addProduct(product, supplier);
+    }
+  }
+
+  @override
   Future<void> deleteProduct(Product product, Supplier supplier) {
     return productCollection.document(product.id).delete().then((value) {
       supplierCollection.document(supplier.id).get().then((snapshot) {

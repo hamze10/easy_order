@@ -21,6 +21,20 @@ class AddProduct extends ManageProductEvent {
       'AddProduct { product : $product, supplier : $supplier }';
 }
 
+class AddMultipleProduct extends ManageProductEvent {
+  final List<Product> products;
+  final Supplier supplier;
+
+  const AddMultipleProduct(this.products, this.supplier);
+
+  @override
+  List<Object> get props => [products, supplier];
+
+  @override
+  String toString() =>
+      'AddProduct { products : $products, supplier : $supplier }';
+}
+
 class UpdateProduct extends ManageProductEvent {
   final Product product;
 

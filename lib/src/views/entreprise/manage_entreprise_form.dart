@@ -93,6 +93,11 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10.0),
+                      ),
+                    ),
                     title: Text("Suppression"),
                     content: Text(
                         "Voulez-vous vraiment supprimer cette entreprise ? "),
