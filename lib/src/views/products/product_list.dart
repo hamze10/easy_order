@@ -4,14 +4,14 @@ import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/models/product/manageProductArguments.dart';
 import 'package:easy_order/src/models/product/product.dart';
 import 'package:easy_order/src/utils/currency_converter.dart';
-import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../customAppBar.dart';
 
 class ProductList extends StatefulWidget {
   final Order _products;
@@ -20,14 +20,12 @@ class ProductList extends StatefulWidget {
       : assert(products != null),
         _products = products,
         super(key: key);
-
   @override
   _ProductListState createState() => _ProductListState();
 }
 
 class _ProductListState extends State<ProductList> {
   Order get _products => widget._products;
-  final SlidableController _slidableController = SlidableController();
   PanelController _pc = PanelController();
   bool _isOpen = false;
   List<Order> myOrders = [];
@@ -136,11 +134,15 @@ class _ProductListState extends State<ProductList> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> _getTypesProduct =
+        _products.fromSupplier.map((e) => e.typeProduct).toSet().toList();
+    _getTypesProduct.sort();
+
     return Scaffold(
       appBar: CustomAppBar(
-        title: 'PRODUITS',
-        gradientBegin: Colors.red[700],
-        grandientEnd: Colors.red[300],
+        title: '',
+        gradientBegin: _isOpen ? Colors.black54 : Colors.grey[50],
+        grandientEnd: _isOpen ? Colors.black54 : Colors.grey[50],
         leftWidget: _leftWidget(context),
         rightWidget: _rightWidget(),
       ),
@@ -152,101 +154,111 @@ class _ProductListState extends State<ProductList> {
             return _onBackPressed(context);
           }
         },
-        child: Stack(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Card(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.zero)),
-                  margin: EdgeInsets.all(0.0),
-                  shadowColor: Colors.grey[50],
-                  elevation: 5.0,
-                  color: Colors.grey[100],
-                  child: ListTile(
-                    leading: Icon(Icons.search),
-                    title: Text('Recherche..'),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            BlocProvider.of<ProductsBloc>(context)
+              ..add(LoadProducts(_products.fromSupplier, _products.supplier));
+          },
+          child: Stack(
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Produits',
+                      style: TextStyle(
+                        fontFamily: 'Fredoka',
+                        fontSize: 38.0,
+                        letterSpacing: 1.2,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      BlocProvider.of<ProductsBloc>(context)
-                        ..add(LoadProducts(
-                            _products.fromSupplier, _products.supplier));
-                    },
+                  SizedBox(
+                    height: 20.0,
+                  ),
+                  Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: ListView.separated(
-                        separatorBuilder: (context, i) => Divider(),
-                        itemCount: _products.fromSupplier.length,
+                      padding: EdgeInsets.all(8.0),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        physics: ScrollPhysics(),
+                        itemCount: _getTypesProduct.length,
                         itemBuilder: (context, i) {
                           return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {},
-                              child: Slidable(
-                                actionPane: SlidableScrollActionPane(),
-                                actionExtentRatio: 0.25,
-                                key: Key(_products.fromSupplier[i].id),
-                                controller: _slidableController,
-                                child: ListItem(
-                                  _products.fromSupplier[i],
-                                  _products,
-                                  addToCart,
-                                ),
-                                secondaryActions: <Widget>[
-                                  IconSlideAction(
-                                    color: Colors.transparent,
-                                    foregroundColor: Colors.black,
-                                    iconWidget: CircleAvatar(
-                                      backgroundColor: Colors.orange[400],
-                                      child: Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                      ),
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 8.0),
+                                  child: Text(
+                                    _getTypesProduct[i],
+                                    style: TextStyle(
+                                      fontFamily: 'Fredoka',
+                                      fontSize: 16.0,
+                                      letterSpacing: 1.2,
+                                      fontWeight: FontWeight.w500,
                                     ),
-                                    onTap: () {
-                                      Navigator.pushNamed(
-                                          context, '/manageProduct',
-                                          arguments: ManageProductArguments(
-                                              _products.fromSupplier[i],
-                                              _products.supplier));
+                                  ),
+                                ),
+                                ConstrainedBox(
+                                  constraints: BoxConstraints(maxHeight: 200),
+                                  child: ListView.builder(
+                                    shrinkWrap: true,
+                                    physics: ScrollPhysics(),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: _products.fromSupplier
+                                        .where((e) =>
+                                            e.typeProduct ==
+                                            _getTypesProduct[i])
+                                        .length,
+                                    itemBuilder: (context, i2) {
+                                      final prod = _products.fromSupplier
+                                          .where((e) =>
+                                              e.typeProduct ==
+                                              _getTypesProduct[i])
+                                          .toList()[i2];
+                                      return ListItem(
+                                          prod, _products, addToCart);
                                     },
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           );
                         },
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            SlidingUpPanel(
-              backdropEnabled: true,
-              backdropOpacity: 0.7,
-              onPanelClosed: () {
-                setState(() {
-                  _isOpen = !_isOpen;
-                });
-              },
-              onPanelOpened: () {
-                setState(() {
-                  _isOpen = !_isOpen;
-                });
-              },
-              minHeight: 0,
-              controller: _pc,
-              panel: OrderPanel(myOrders, removeToCart),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24.0),
-                topRight: Radius.circular(24.0),
+                ],
               ),
-            ),
-          ],
+              SlidingUpPanel(
+                backdropEnabled: true,
+                backdropOpacity: 0.54,
+                onPanelClosed: () {
+                  setState(() {
+                    _isOpen = !_isOpen;
+                  });
+                },
+                onPanelOpened: () {
+                  setState(() {
+                    _isOpen = !_isOpen;
+                  });
+                },
+                minHeight: 0,
+                controller: _pc,
+                panel: OrderPanel(myOrders, removeToCart),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(24.0),
+                  topRight: Radius.circular(24.0),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: SpeedDial(
@@ -286,7 +298,6 @@ class ListItem extends StatefulWidget {
   final Function(Order) callback;
 
   ListItem(this.product, this.order, this.callback);
-
   @override
   _ListItemState createState() => _ListItemState();
 }
@@ -316,132 +327,114 @@ class _ListItemState extends State<ListItem> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Row(
+    return GestureDetector(
+      onLongPress: () {
+        Navigator.pushNamed(context, '/manageProduct',
+            arguments: ManageProductArguments(product, order.supplier));
+      },
+      child: Card(
+        child: Column(
           children: <Widget>[
             Container(
-              width: 80.0,
-              child: Image(
-                image: !product.picture.startsWith("images/")
-                    ? NetworkImage(product.picture)
-                    : AssetImage(product.picture),
+              height: 80.0,
+              width: 150.0,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                    image: product.picture.startsWith('images/')
+                        ? AssetImage(product.picture)
+                        : NetworkImage(product.picture),
+                    fit: BoxFit.fill),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              padding: const EdgeInsets.symmetric(
+                vertical: 4.0,
+              ),
+              child: Text(
+                product.name,
+                style: TextStyle(
+                  fontFamily: 'Fredoka',
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            Text(
+              product.description,
+              style: TextStyle(
+                fontSize: 10.0,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text(
+                product.price.toStringAsFixed(2) +
+                    CurrencyConvertor.convert(product.currency),
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Row(
                 children: <Widget>[
-                  Text(
-                    product.name,
-                    style: TextStyle(
-                      fontSize: 14.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    product.description,
-                    style: TextStyle(
-                      fontSize: 11.0,
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5.0),
-                    child: Text(
-                      product.price.toStringAsFixed(2) +
-                          CurrencyConvertor.convert(product.currency),
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
+                    padding: const EdgeInsets.only(right: 16.0),
+                    child: Container(
+                      width: 50.0,
+                      height: 26.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(7.0),
+                        ),
+                        color: Colors.green[600],
+                      ),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        controller: _quantityController,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white),
+                        keyboardType: TextInputType.number,
+                        onChanged: (String newValue) {
+                          setState(() {
+                            _quantity = int.parse(newValue);
+                          });
+                        },
                       ),
                     ),
                   ),
-                  //Ajouter input pour rentrer la quantité manuellement
-                  Row(
-                    children: <Widget>[
-                      Container(
-                        width: 30.0,
-                        height: 25.0,
-                        decoration: BoxDecoration(
-                          color: Colors.red[400],
+                  GestureDetector(
+                    onTap: () {
+                      Order orderWithQuantity =
+                          order.copyWith(product: product, quantity: _quantity);
+                      bool value = widget.callback(orderWithQuantity);
+                      String text = value
+                          ? 'Produit ajouté au panier.'
+                          : 'Produit déjà dans le panier.';
+                      Scaffold.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(text),
+                          backgroundColor:
+                              value ? Colors.green[600] : Colors.red[400],
+                          duration: Duration(milliseconds: 800),
                         ),
-                        child: TextFormField(
-                          controller: _quantityController,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white),
-                          keyboardType: TextInputType.number,
-                          onChanged: (String newValue) {
-                            setState(() {
-                              _quantity = int.parse(newValue);
-                            });
-                          },
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10.0),
-                        child: SliderTheme(
-                          data: SliderThemeData(
-                            trackHeight: 5.0,
-                            trackShape: CustomTrackShape(),
-                            thumbShape:
-                                RoundSliderThumbShape(enabledThumbRadius: 8.0),
-                          ),
-                          child: Slider(
-                            value: _quantity <= 250 ? _quantity.toDouble() : 1,
-                            min: 1,
-                            max: 250,
-                            label: 'Quantité : $_quantity',
-                            divisions: 50,
-                            activeColor: Colors.red[400],
-                            inactiveColor: Colors.red[50],
-                            onChanged: (double newValue) {
-                              setState(() {
-                                _quantity = newValue.round();
-                                _quantityController.value = TextEditingValue(
-                                  text: _quantity.toString(),
-                                  selection: TextSelection.fromPosition(
-                                    TextPosition(
-                                        offset: _quantity.toString().length),
-                                  ),
-                                );
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                    ],
+                      );
+                    },
+                    child: Icon(
+                      Icons.add_circle,
+                      size: 30.0,
+                      color: Colors.green[600],
+                    ),
                   ),
                 ],
               ),
             ),
           ],
         ),
-        GestureDetector(
-          onTap: () {
-            Order orderWithQuantity =
-                order.copyWith(product: product, quantity: _quantity);
-            bool value = widget.callback(orderWithQuantity);
-            String text = value
-                ? 'Produit ajouté au panier.'
-                : 'Produit déjà dans le panier.';
-            Scaffold.of(context).showSnackBar(
-              SnackBar(
-                content: Text(text),
-                backgroundColor: value ? Colors.green[600] : Colors.red[400],
-                duration: Duration(milliseconds: 800),
-              ),
-            );
-          },
-          child: Icon(
-            Icons.add_shopping_cart,
-            size: 35.0,
-            color: Colors.green[600],
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -458,7 +451,7 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
     final double trackLeft = offset.dx;
     final double trackTop =
         offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackWidth = parentBox.size.width / 1.25;
+    final double trackWidth = parentBox.size.width / 1.50;
     return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }
@@ -587,7 +580,8 @@ class OrderPanel extends StatelessWidget {
                   onPressed: orders.length == 0
                       ? null
                       : () {
-                          String _allOrders = '';
+                          String _allOrders =
+                              'Commande de ${orders.first.entreprise.name} : ';
                           String _telSupplier =
                               orders.first.supplier.tel.startsWith("+")
                                   ? orders.first.supplier.tel

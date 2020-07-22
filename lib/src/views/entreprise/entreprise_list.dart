@@ -3,7 +3,6 @@ import 'package:easy_order/src/models/entreprise/entreprise.dart';
 import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 

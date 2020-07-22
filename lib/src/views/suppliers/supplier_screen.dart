@@ -19,8 +19,8 @@ class SupplierScreen extends StatelessWidget {
             color: Colors.white,
             child: Center(
               child: CircularProgressIndicator(
-                backgroundColor: Colors.teal,
-                valueColor: AlwaysStoppedAnimation(Colors.teal[100]),
+                backgroundColor: Colors.red,
+                valueColor: AlwaysStoppedAnimation(Colors.red[100]),
               ),
             ),
           );
