@@ -1,10 +1,12 @@
 import 'package:badges/badges.dart';
+import 'package:easy_order/src/blocs/products_bloc/products_bloc.dart';
 import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/models/product/manageProductArguments.dart';
 import 'package:easy_order/src/models/product/product.dart';
 import 'package:easy_order/src/utils/currency_converter.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -155,49 +157,57 @@ class _ProductListState extends State<ProductList> {
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.separated(
-                    separatorBuilder: (context, i) => Divider(),
-                    itemCount: _products.fromSupplier.length,
-                    itemBuilder: (context, i) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: Slidable(
-                            actionPane: SlidableScrollActionPane(),
-                            actionExtentRatio: 0.25,
-                            key: Key(_products.fromSupplier[i].id),
-                            controller: _slidableController,
-                            child: ListItem(
-                              _products.fromSupplier[i],
-                              _products,
-                              addToCart,
-                            ),
-                            secondaryActions: <Widget>[
-                              IconSlideAction(
-                                color: Colors.transparent,
-                                foregroundColor: Colors.black,
-                                iconWidget: CircleAvatar(
-                                  backgroundColor: Colors.orange[400],
-                                  child: Icon(
-                                    Icons.edit,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/manageProduct',
-                                      arguments: ManageProductArguments(
-                                          _products.fromSupplier[i],
-                                          _products.supplier));
-                                },
+                child: RefreshIndicator(
+                  onRefresh: () async {
+                    BlocProvider.of<ProductsBloc>(context)
+                      ..add(LoadProducts(
+                          _products.fromSupplier, _products.supplier));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ListView.separated(
+                      separatorBuilder: (context, i) => Divider(),
+                      itemCount: _products.fromSupplier.length,
+                      itemBuilder: (context, i) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {},
+                            child: Slidable(
+                              actionPane: SlidableScrollActionPane(),
+                              actionExtentRatio: 0.25,
+                              key: Key(_products.fromSupplier[i].id),
+                              controller: _slidableController,
+                              child: ListItem(
+                                _products.fromSupplier[i],
+                                _products,
+                                addToCart,
                               ),
-                            ],
+                              secondaryActions: <Widget>[
+                                IconSlideAction(
+                                  color: Colors.transparent,
+                                  foregroundColor: Colors.black,
+                                  iconWidget: CircleAvatar(
+                                    backgroundColor: Colors.orange[400],
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, '/manageProduct',
+                                        arguments: ManageProductArguments(
+                                            _products.fromSupplier[i],
+                                            _products.supplier));
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),

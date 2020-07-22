@@ -1,7 +1,9 @@
+import 'package:easy_order/src/blocs/suppliers_bloc/suppliers_bloc.dart';
 import 'package:easy_order/src/models/order.dart';
 import 'package:easy_order/src/models/suppliers/manageSupplierArguments.dart';
 import 'package:easy_order/src/views/customAppBar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class SupplierList extends StatefulWidget {
@@ -56,74 +58,81 @@ class _SupplierListState extends State<SupplierList> {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.separated(
-                separatorBuilder: (context, i) => Divider(),
-                itemCount: _suppliers.fromEntreprise.length,
-                itemBuilder: (context, i) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          '/products',
-                          arguments: _suppliers.copyWith(
-                              fromSupplier:
-                                  _suppliers.fromEntreprise[i].products,
-                              supplier: _suppliers.fromEntreprise[
-                                  i]), /*ProductArguments(
-                            _suppliers.fromEntreprise[i].products,
-                            _suppliers.fromEntreprise[i],
-                          ),*/
-                        );
-                      },
-                      child: Slidable(
-                        actionPane: SlidableScrollActionPane(),
-                        actionExtentRatio: 0.25,
-                        key: Key(_suppliers.fromEntreprise[i].id),
-                        controller: _slidableController,
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            radius: 30.0,
-                            backgroundImage: !_suppliers
-                                    .fromEntreprise[i].picture
-                                    .startsWith("images/")
-                                ? NetworkImage(
-                                    _suppliers.fromEntreprise[i].picture)
-                                : AssetImage(
-                                    _suppliers.fromEntreprise[i].picture),
-                            backgroundColor: Colors.grey[300],
-                          ),
-                          title: Text(_suppliers.fromEntreprise[i].name),
-                          subtitle: Text(_suppliers.fromEntreprise[i].email +
-                              " · " +
-                              _suppliers.fromEntreprise[i].tel),
-                        ),
-                        secondaryActions: <Widget>[
-                          IconSlideAction(
-                            color: Colors.transparent,
-                            foregroundColor: Colors.black,
-                            iconWidget: CircleAvatar(
-                              backgroundColor: Colors.orange[400],
-                              child: Icon(
-                                Icons.edit,
-                                color: Colors.white,
-                              ),
+            child: RefreshIndicator(
+              onRefresh: () async {
+                BlocProvider.of<SuppliersBloc>(context)
+                  ..add(LoadSuppliers(
+                      _suppliers.fromEntreprise, _suppliers.entreprise));
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.separated(
+                  separatorBuilder: (context, i) => Divider(),
+                  itemCount: _suppliers.fromEntreprise.length,
+                  itemBuilder: (context, i) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/products',
+                            arguments: _suppliers.copyWith(
+                                fromSupplier:
+                                    _suppliers.fromEntreprise[i].products,
+                                supplier: _suppliers.fromEntreprise[
+                                    i]), /*ProductArguments(
+                              _suppliers.fromEntreprise[i].products,
+                              _suppliers.fromEntreprise[i],
+                            ),*/
+                          );
+                        },
+                        child: Slidable(
+                          actionPane: SlidableScrollActionPane(),
+                          actionExtentRatio: 0.25,
+                          key: Key(_suppliers.fromEntreprise[i].id),
+                          controller: _slidableController,
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              radius: 30.0,
+                              backgroundImage: !_suppliers
+                                      .fromEntreprise[i].picture
+                                      .startsWith("images/")
+                                  ? NetworkImage(
+                                      _suppliers.fromEntreprise[i].picture)
+                                  : AssetImage(
+                                      _suppliers.fromEntreprise[i].picture),
+                              backgroundColor: Colors.grey[300],
                             ),
-                            onTap: () {
-                              Navigator.pushNamed(context, '/manageSupplier',
-                                  arguments: ManageSupplierArguments(
-                                      _suppliers.fromEntreprise[i],
-                                      _suppliers.entreprise));
-                            },
+                            title: Text(_suppliers.fromEntreprise[i].name),
+                            subtitle: Text(_suppliers.fromEntreprise[i].email +
+                                " · " +
+                                _suppliers.fromEntreprise[i].tel),
                           ),
-                        ],
+                          secondaryActions: <Widget>[
+                            IconSlideAction(
+                              color: Colors.transparent,
+                              foregroundColor: Colors.black,
+                              iconWidget: CircleAvatar(
+                                backgroundColor: Colors.orange[400],
+                                child: Icon(
+                                  Icons.edit,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.pushNamed(context, '/manageSupplier',
+                                    arguments: ManageSupplierArguments(
+                                        _suppliers.fromEntreprise[i],
+                                        _suppliers.entreprise));
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
+                    );
+                  },
+                ),
               ),
             ),
           ),
