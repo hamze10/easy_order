@@ -70,6 +70,9 @@ flutter:
     - family: Balsamiq
       fonts:
         - asset: fonts/BalsamiqSans-Regular.ttf
+    - family: Fredoka
+      fonts:
+        - asset: fonts/FredokaOne-Regular.ttf
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
