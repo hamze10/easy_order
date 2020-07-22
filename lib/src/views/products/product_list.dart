@@ -32,6 +32,50 @@ class _ProductListState extends State<ProductList> {
   bool _isOpen = false;
   List<Order> myOrders = [];
 
+  _onBackPressed(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(10.0),
+              ),
+            ),
+            title: Row(
+              children: <Widget>[
+                Icon(Icons.warning),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8.0),
+                  child: Text("Attention !"),
+                ),
+              ],
+            ),
+            content: Text(
+              "Si vous quittez cette page, votre commande sera perdue. Voulez-vous vraiment quitter cette page ?",
+            ),
+            actions: [
+              FlatButton(
+                child: Text("Non"),
+                onPressed: () {
+                  Navigator.pop(context, false);
+                },
+              ),
+              FlatButton(
+                child: Text("Oui"),
+                onPressed: () {
+                  Navigator.pop(context, true);
+                },
+              ),
+            ],
+          );
+        }).then((value) {
+      if (value == true) {
+        Navigator.pop(context);
+      }
+    });
+  }
+
   Widget _leftWidget(BuildContext context) => Padding(
         padding: const EdgeInsets.only(left: 8.0),
         child: GestureDetector(
@@ -39,47 +83,7 @@ class _ProductListState extends State<ProductList> {
             if (myOrders.isEmpty) {
               Navigator.pop(context);
             } else {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
-                        ),
-                      ),
-                      title: Row(
-                        children: <Widget>[
-                          Icon(Icons.warning),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text("Attention !"),
-                          ),
-                        ],
-                      ),
-                      content: Text(
-                        "Si vous quittez cette page, votre commande sera perdue. Voulez-vous vraiment quitter cette page ?",
-                      ),
-                      actions: [
-                        FlatButton(
-                          child: Text("Non"),
-                          onPressed: () {
-                            Navigator.pop(context, false);
-                          },
-                        ),
-                        FlatButton(
-                          child: Text("Oui"),
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                        ),
-                      ],
-                    );
-                  }).then((value) {
-                if (value == true) {
-                  Navigator.pop(context);
-                }
-              });
+              _onBackPressed(context);
             }
           },
           child: Tab(
@@ -140,101 +144,110 @@ class _ProductListState extends State<ProductList> {
         leftWidget: _leftWidget(context),
         rightWidget: _rightWidget(),
       ),
-      body: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              Card(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.zero)),
-                margin: EdgeInsets.all(0.0),
-                shadowColor: Colors.grey[50],
-                elevation: 5.0,
-                color: Colors.grey[100],
-                child: ListTile(
-                  leading: Icon(Icons.search),
-                  title: Text('Recherche..'),
+      body: WillPopScope(
+        onWillPop: () {
+          if (myOrders.isEmpty) {
+            Navigator.pop(context);
+          } else {
+            return _onBackPressed(context);
+          }
+        },
+        child: Stack(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.zero)),
+                  margin: EdgeInsets.all(0.0),
+                  shadowColor: Colors.grey[50],
+                  elevation: 5.0,
+                  color: Colors.grey[100],
+                  child: ListTile(
+                    leading: Icon(Icons.search),
+                    title: Text('Recherche..'),
+                  ),
                 ),
-              ),
-              Expanded(
-                child: RefreshIndicator(
-                  onRefresh: () async {
-                    BlocProvider.of<ProductsBloc>(context)
-                      ..add(LoadProducts(
-                          _products.fromSupplier, _products.supplier));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListView.separated(
-                      separatorBuilder: (context, i) => Divider(),
-                      itemCount: _products.fromSupplier.length,
-                      itemBuilder: (context, i) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: Slidable(
-                              actionPane: SlidableScrollActionPane(),
-                              actionExtentRatio: 0.25,
-                              key: Key(_products.fromSupplier[i].id),
-                              controller: _slidableController,
-                              child: ListItem(
-                                _products.fromSupplier[i],
-                                _products,
-                                addToCart,
-                              ),
-                              secondaryActions: <Widget>[
-                                IconSlideAction(
-                                  color: Colors.transparent,
-                                  foregroundColor: Colors.black,
-                                  iconWidget: CircleAvatar(
-                                    backgroundColor: Colors.orange[400],
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, '/manageProduct',
-                                        arguments: ManageProductArguments(
-                                            _products.fromSupplier[i],
-                                            _products.supplier));
-                                  },
+                Expanded(
+                  child: RefreshIndicator(
+                    onRefresh: () async {
+                      BlocProvider.of<ProductsBloc>(context)
+                        ..add(LoadProducts(
+                            _products.fromSupplier, _products.supplier));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: ListView.separated(
+                        separatorBuilder: (context, i) => Divider(),
+                        itemCount: _products.fromSupplier.length,
+                        itemBuilder: (context, i) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {},
+                              child: Slidable(
+                                actionPane: SlidableScrollActionPane(),
+                                actionExtentRatio: 0.25,
+                                key: Key(_products.fromSupplier[i].id),
+                                controller: _slidableController,
+                                child: ListItem(
+                                  _products.fromSupplier[i],
+                                  _products,
+                                  addToCart,
                                 ),
-                              ],
+                                secondaryActions: <Widget>[
+                                  IconSlideAction(
+                                    color: Colors.transparent,
+                                    foregroundColor: Colors.black,
+                                    iconWidget: CircleAvatar(
+                                      backgroundColor: Colors.orange[400],
+                                      child: Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/manageProduct',
+                                          arguments: ManageProductArguments(
+                                              _products.fromSupplier[i],
+                                              _products.supplier));
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SlidingUpPanel(
-            backdropEnabled: true,
-            backdropOpacity: 0.7,
-            onPanelClosed: () {
-              setState(() {
-                _isOpen = !_isOpen;
-              });
-            },
-            onPanelOpened: () {
-              setState(() {
-                _isOpen = !_isOpen;
-              });
-            },
-            minHeight: 0,
-            controller: _pc,
-            panel: OrderPanel(myOrders, removeToCart),
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(24.0),
-              topRight: Radius.circular(24.0),
+              ],
             ),
-          ),
-        ],
+            SlidingUpPanel(
+              backdropEnabled: true,
+              backdropOpacity: 0.7,
+              onPanelClosed: () {
+                setState(() {
+                  _isOpen = !_isOpen;
+                });
+              },
+              onPanelOpened: () {
+                setState(() {
+                  _isOpen = !_isOpen;
+                });
+              },
+              minHeight: 0,
+              controller: _pc,
+              panel: OrderPanel(myOrders, removeToCart),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24.0),
+                topRight: Radius.circular(24.0),
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: SpeedDial(
         visible: !_isOpen,
