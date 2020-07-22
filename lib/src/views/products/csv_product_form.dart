@@ -71,59 +71,67 @@ class _CSVProductFormState extends State<CSVProductForm> {
             Expanded(
               child: Column(
                 children: <Widget>[
-                  Center(
-                    child: GestureDetector(
-                      onTap: _openFileExplorer,
-                      child: Image.asset('images/icon_upload_file.gif'),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Center(
-                        child: Text(
-                          'Veuilez respectez la structure suivante : ',
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.grey[700],
-                          ),
+                  Flexible(
+                    flex: 3,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: _openFileExplorer,
+                        child: Image.asset(
+                          'images/icon_upload_file.png',
                         ),
                       ),
-                      Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, right: 8.0, top: 2.0, bottom: 8.0),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Center(
                           child: Text(
-                            'name | description | picture | currency | price | typeProduit',
+                            'Veuillez respectez la structure suivante : ',
                             style: TextStyle(
-                              fontSize: 12.0,
-                              color: Colors.grey[500],
-                              fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                              color: Colors.grey[700],
                             ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          '· picture est facultatif.',
-                          style: TextStyle(
-                            fontSize: 11.0,
-                            color: Colors.grey[500],
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 8.0, right: 8.0, top: 2.0, bottom: 8.0),
+                            child: Text(
+                              'name | description | picture | currency | price | typeProduct',
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                color: Colors.grey[500],
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          "· currency est facultatif et prend par défaut '€', ses autres valeurs sont : MAD, \$ ou £.",
-                          style: TextStyle(
-                            fontSize: 11.0,
-                            color: Colors.grey[500],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            '· picture est facultatif.',
+                            style: TextStyle(
+                              fontSize: 11.0,
+                              color: Colors.grey[500],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Text(
+                            "· currency est facultatif et prend par défaut '€', ses autres valeurs sont : MAD, \$ ou £.",
+                            style: TextStyle(
+                              fontSize: 11.0,
+                              color: Colors.grey[500],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -133,7 +141,7 @@ class _CSVProductFormState extends State<CSVProductForm> {
                 print("envoyer");
               },
               child: Container(
-                color: Colors.blue[300],
+                color: Colors.red[300],
                 height: 50.0,
                 child: Center(
                   child: Text(

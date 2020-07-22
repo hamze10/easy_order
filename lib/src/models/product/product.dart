@@ -5,7 +5,7 @@ class Product {
   final String id;
   final String name;
   final String description;
-  final String typeProduit;
+  final String typeProduct;
   final Currency currency;
   final double price;
   final String picture;
@@ -14,7 +14,7 @@ class Product {
     this.id,
     this.name,
     this.description,
-    this.typeProduit,
+    this.typeProduct,
     this.currency,
     this.price,
     this.picture,
@@ -24,7 +24,7 @@ class Product {
     String id,
     String name,
     String description,
-    String typeProduit,
+    String typeProduct,
     Currency currency,
     double price,
     String picture,
@@ -33,7 +33,7 @@ class Product {
       id: id ?? this.id,
       name: name ?? this.name,
       description: description ?? this.description,
-      typeProduit: typeProduit ?? this.typeProduit,
+      typeProduct: typeProduct ?? this.typeProduct,
       currency: currency ?? this.currency,
       price: price ?? this.price,
       picture: picture ?? this.picture,
@@ -45,7 +45,7 @@ class Product {
       id.hashCode ^
       name.hashCode ^
       description.hashCode ^
-      typeProduit.hashCode ^
+      typeProduct.hashCode ^
       currency.hashCode ^
       price.hashCode ^
       picture.hashCode;
@@ -58,21 +58,21 @@ class Product {
           id == other.id &&
           name == other.name &&
           description == other.description &&
-          typeProduit == other.typeProduit &&
+          typeProduct == other.typeProduct &&
           currency == other.currency &&
           price == other.price &&
           picture == other.picture;
 
   @override
   String toString() =>
-      'Product : { id : $id, name : $name, description : $description, typeProduit : $typeProduit, currency : $currency, price : $price, picture : $picture }';
+      'Product : { id : $id, name : $name, description : $description, typeProduct : $typeProduct, currency : $currency, price : $price, picture : $picture }';
 
   ProductEntity toEntity() {
     return ProductEntity(
       id,
       name,
       description,
-      typeProduit,
+      typeProduct,
       currency,
       price,
       picture,
@@ -84,7 +84,7 @@ class Product {
       id: entity.id,
       name: entity.name,
       description: entity.description,
-      typeProduit: entity.typeProduit,
+      typeProduct: entity.typeProduct,
       currency: entity.currency,
       price: entity.price,
       picture: entity.picture,

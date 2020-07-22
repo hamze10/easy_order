@@ -7,7 +7,7 @@ class ProductEntity extends Equatable {
   final String id;
   final String name;
   final String description;
-  final String typeProduit;
+  final String typeProduct;
   final Currency currency;
   final double price;
   final String picture;
@@ -16,7 +16,7 @@ class ProductEntity extends Equatable {
     this.id,
     this.name,
     this.description,
-    this.typeProduit,
+    this.typeProduct,
     this.currency,
     this.price,
     this.picture,
@@ -27,7 +27,7 @@ class ProductEntity extends Equatable {
       "id": id,
       "name": name,
       "description": description,
-      "typeProduit": typeProduit,
+      "typeProduct": typeProduct,
       "currency": currency,
       "price": price,
       "picture": picture,
@@ -36,18 +36,18 @@ class ProductEntity extends Equatable {
 
   @override
   List<Object> get props =>
-      [id, name, description, typeProduit, currency, price, picture];
+      [id, name, description, typeProduct, currency, price, picture];
 
   @override
   String toString() =>
-      'ProductEntity : { id : $id, name : $name, description : $description, typeProduit : $typeProduit, currency : $currency, price : $price, picture : $picture}';
+      'ProductEntity : { id : $id, name : $name, description : $description, typeProduct : $typeProduct, currency : $currency, price : $price, picture : $picture}';
 
   static ProductEntity fromJson(Map<String, Object> json) {
     return ProductEntity(
       json["id"] as String,
       json["name"] as String,
       json["description"] as String,
-      json["typeProduit"] as String,
+      json["typeProduct"] as String,
       json["currency"] as Currency,
       json["price"] as double,
       json["picture"] as String,
@@ -59,7 +59,7 @@ class ProductEntity extends Equatable {
       snap.documentID,
       snap.data["name"],
       snap.data["description"],
-      snap.data["typeProduit"],
+      snap.data["typeProduct"],
       CurrencyConvertor.toCurrency(snap.data["currency"]),
       snap.data["price"],
       snap.data["picture"],
@@ -70,7 +70,7 @@ class ProductEntity extends Equatable {
     return {
       "name": name,
       "description": description,
-      "typeProduit": typeProduit,
+      "typeProduct": typeProduct,
       "currency": CurrencyConvertor.convert(currency),
       "price": price,
       "picture": picture,

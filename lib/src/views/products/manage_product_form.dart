@@ -32,7 +32,7 @@ class _ManageProductFormState extends State<ManageProductForm> {
 
   String _name;
   String _description;
-  String _typeProduit;
+  String _typeProduct;
   Currency _currency;
   double _price;
   String _picture;
@@ -256,7 +256,7 @@ class _ManageProductFormState extends State<ManageProductForm> {
                                   horizontal: 16.0, vertical: 8.0),
                               child: TextFormField(
                                 initialValue: editingProd.product != null
-                                    ? editingProd.product.typeProduit
+                                    ? editingProd.product.typeProduct
                                     : '',
                                 decoration: InputDecoration(
                                   enabledBorder: UnderlineInputBorder(
@@ -272,7 +272,7 @@ class _ManageProductFormState extends State<ManageProductForm> {
                                       ? 'Veuillez entrer un type de produit'
                                       : null;
                                 },
-                                onSaved: (newValue) => _typeProduit = newValue,
+                                onSaved: (newValue) => _typeProduct = newValue,
                               ),
                             ),
                           ),
@@ -434,7 +434,7 @@ class _ManageProductFormState extends State<ManageProductForm> {
                 id: editingProd.product.id,
                 name: _name,
                 description: _description,
-                typeProduit: _typeProduit,
+                typeProduct: _typeProduct,
                 currency: _currency,
                 price: _price,
                 picture: _pathPicture ?? _picture,
@@ -445,7 +445,7 @@ class _ManageProductFormState extends State<ManageProductForm> {
               Product prod = Product(
                 name: _name,
                 description: _description,
-                typeProduit: _typeProduit,
+                typeProduct: _typeProduct,
                 currency: _currency,
                 price: _price,
                 picture: _pathPicture ?? _picture,

@@ -60,7 +60,7 @@ class _ProductListState extends State<ProductList> {
             position: BadgePosition.bottomLeft(),
             badgeContent: Text(myOrders.length.toString()),
             child: Tab(
-              icon: Image.asset('images/icon_shopping_cart2.png'),
+              icon: Image.asset('images/icon_shopping_cart.png'),
             ),
           ),
         ),
