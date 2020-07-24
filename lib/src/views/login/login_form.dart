@@ -4,6 +4,7 @@ import 'package:easy_order/src/views/login/google_login_button.dart';
 import 'package:easy_order/src/views/login/login_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginForm extends StatefulWidget {
   final UserRepository _userRepository;
@@ -82,9 +83,9 @@ class _LoginFormState extends State<LoginForm> {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('EasyOrder est actuellement en phase de test.'),
+                Text('Prorder est actuellement en phase de test.'),
                 Text(
-                    'Vous recevrez une notification lorsque EasyOrder sera prêt !'),
+                    'Vous recevrez une notification lorsque Prorder sera prêt !'),
               ],
             ),
           ),
@@ -152,7 +153,10 @@ class _LoginFormState extends State<LoginForm> {
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                        child: Image.asset('images/logo.png'),
+                        child: Image.asset(
+                          'images/logo.png',
+                          width: 200.0,
+                        ),
                       ),
                       Expanded(
                         flex: 2,
@@ -163,12 +167,12 @@ class _LoginFormState extends State<LoginForm> {
                               decoration: InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'EMAIL',
                                 labelStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                                 errorStyle: TextStyle(
                                   color: Colors.red[900],
@@ -185,7 +189,7 @@ class _LoginFormState extends State<LoginForm> {
                                 ),
                                 suffixIcon: Icon(
                                   Icons.email,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                               keyboardType: TextInputType.emailAddress,
@@ -197,7 +201,8 @@ class _LoginFormState extends State<LoginForm> {
                                     : null;
                               },
                               style: TextStyle(
-                                color: Colors.orange[200],
+                                color: Colors.red[300],
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                             TextFormField(
@@ -205,12 +210,12 @@ class _LoginFormState extends State<LoginForm> {
                               decoration: InputDecoration(
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(
-                                    color: Colors.white,
+                                    color: Colors.black,
                                   ),
                                 ),
                                 labelText: 'MOT DE PASSE',
                                 labelStyle: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                                 errorStyle: TextStyle(
                                   color: Colors.red[900],
@@ -227,7 +232,7 @@ class _LoginFormState extends State<LoginForm> {
                                 ),
                                 suffixIcon: Icon(
                                   Icons.lock,
-                                  color: Colors.white,
+                                  color: Colors.black,
                                 ),
                               ),
                               keyboardType: TextInputType.visiblePassword,
@@ -239,7 +244,8 @@ class _LoginFormState extends State<LoginForm> {
                                     : null;
                               },
                               style: TextStyle(
-                                color: Colors.orange[200],
+                                color: Colors.red[300],
+                                fontWeight: FontWeight.w600,
                               ),
                               obscureText: true,
                             ),
@@ -254,7 +260,7 @@ class _LoginFormState extends State<LoginForm> {
                                   Text(
                                     'Mot de passe oublié ?',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 13.0,
                                     ),
                                   ),
@@ -281,8 +287,9 @@ class _LoginFormState extends State<LoginForm> {
                                   Text(
                                     'Pas de compte ? ',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontSize: 12.0,
+                                      fontWeight: FontWeight.w500,
                                     ),
                                   ),
                                   GestureDetector(
@@ -290,7 +297,7 @@ class _LoginFormState extends State<LoginForm> {
                                     child: Text(
                                       'créer un nouveau compte.',
                                       style: TextStyle(
-                                        color: Colors.orange[200],
+                                        color: Colors.orange[400],
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -299,6 +306,20 @@ class _LoginFormState extends State<LoginForm> {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 2.0),
+                        child: InkWell(
+                          onTap: () {
+                            launch('https://www.github.com/hamze10');
+                          },
+                          child: Text(
+                            '© Hamza M.',
+                            style: TextStyle(
+                              fontSize: 10.0,
+                            ),
+                          ),
                         ),
                       ),
                     ],

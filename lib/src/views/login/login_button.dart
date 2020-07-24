@@ -21,6 +21,7 @@ class LoginButton extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.0,
               color: Colors.black,
+              letterSpacing: 1.2,
             ),
           ),
         ),

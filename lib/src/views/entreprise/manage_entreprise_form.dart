@@ -86,7 +86,7 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
         IconButton(
           icon: Icon(
             Icons.delete,
-            color: Colors.white,
+            color: Colors.black54,
           ),
           onPressed: () {
             showDialog(
@@ -127,12 +127,17 @@ class _ManageEntrepriseFormState extends State<ManageEntrepriseForm> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[400],
+        backgroundColor: Colors.grey[100],
+        iconTheme: IconThemeData(color: Colors.black54),
         actions: actions,
+        centerTitle: true,
         title: Text(
           editingEnt != null
               ? 'Modifier une entreprise'
               : 'Ajouter une entreprise',
+          style: TextStyle(
+            color: Colors.black54,
+          ),
         ),
       ),
       body: BlocListener<ManageEntrepriseBloc, ManageEntrepriseState>(

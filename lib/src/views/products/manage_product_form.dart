@@ -450,7 +450,7 @@ class _ManageProductFormState extends State<ManageProductForm> {
               Product prod = Product(
                 name: _name,
                 description: _description,
-                typeProduct: _typeProduct,
+                typeProduct: _typeProduct.isNotEmpty ? _typeProduct : 'autre',
                 currency: _currency,
                 price: _price,
                 picture: _pathPicture ?? _picture,

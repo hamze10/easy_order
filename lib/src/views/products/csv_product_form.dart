@@ -252,15 +252,18 @@ class _CSVProductFormState extends State<CSVProductForm> {
                             return _snackbarError(context);
                           }
                           Product prod = Product(
-                              name: splitting[0],
-                              description: splitting[1],
-                              picture: splitting[2].isNotEmpty
-                                  ? splitting[2]
-                                  : 'images/unknown_product.png',
-                              currency: CurrencyConvertor.toCurrency(
-                                  splitting[3].isNotEmpty ? splitting[3] : '€'),
-                              price: double.parse(splitting[4]),
-                              typeProduct: splitting[5]);
+                            name: splitting[0],
+                            description: splitting[1],
+                            picture: splitting[2].isNotEmpty
+                                ? splitting[2]
+                                : 'images/unknown_product.png',
+                            currency: CurrencyConvertor.toCurrency(
+                                splitting[3].isNotEmpty ? splitting[3] : '€'),
+                            price: double.parse(splitting[4]),
+                            typeProduct: splitting[5].isNotEmpty
+                                ? splitting[5]
+                                : 'autre',
+                          );
                           myProducts.add(prod);
                         }
                         _onAddMultipleProduct(myProducts, editingProd.supplier);

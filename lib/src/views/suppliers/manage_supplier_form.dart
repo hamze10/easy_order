@@ -87,7 +87,7 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
         IconButton(
           icon: Icon(
             Icons.delete,
-            color: Colors.white,
+            color: Colors.black54,
           ),
           onPressed: () {
             showDialog(
@@ -128,12 +128,17 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
     }
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.red[400],
+        backgroundColor: Colors.grey[100],
+        iconTheme: IconThemeData(color: Colors.black54),
+        centerTitle: true,
         actions: actions,
         title: Text(
           editingSupp.supplier != null
               ? 'Modifier un fournisseur'
               : 'Ajouter un fournisseur',
+          style: TextStyle(
+            color: Colors.black54,
+          ),
         ),
       ),
       body: BlocListener<ManageSupplierBloc, ManageSupplierState>(
@@ -186,7 +191,7 @@ class _ManageSupplierFormState extends State<ManageSupplierForm> {
                   backgroundColor: Colors.green[300],
                 ),
               );
-            Navigator.pop(context);
+            Navigator.pop(context, true);
           }
         },
         child: BlocBuilder<ManageSupplierBloc, ManageSupplierState>(

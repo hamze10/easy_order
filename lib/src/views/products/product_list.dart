@@ -456,27 +456,56 @@ class CustomTrackShape extends RoundedRectSliderTrackShape {
   }
 }
 
-class OrderPanel extends StatelessWidget {
+class OrderPanel extends StatefulWidget {
   final List<Order> orders;
   final Function(Order) callback;
 
   OrderPanel(this.orders, this.callback);
 
   @override
+  _OrderPanelState createState() => _OrderPanelState();
+}
+
+class _OrderPanelState extends State<OrderPanel> {
+  List<Order> get orders => widget.orders;
+  Function(Order) get callback => widget.callback;
+  bool favorite = false;
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0, top: 24.0),
+      padding: const EdgeInsets.only(left: 8.0, top: 16.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(left: 16.0, bottom: 24.0),
-            child: Text(
-              'Mes Commandes',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 30.0,
-              ),
+            padding:
+                const EdgeInsets.only(left: 16.0, bottom: 24.0, right: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(
+                  'Mes Commandes',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 30.0,
+                    fontFamily: 'Fredoka',
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    if (favorite) return;
+                    setState(() {
+                      favorite = true;
+                    });
+                  },
+                  icon: Icon(
+                    favorite ? Icons.favorite : Icons.favorite_border,
+                    color: favorite ? Colors.red[400] : Colors.black,
+                    size: 30.0,
+                  ),
+                ),
+              ],
             ),
           ),
           Expanded(

@@ -21,6 +21,7 @@ class GoogleLoginButton extends StatelessWidget {
             style: TextStyle(
               fontSize: 16.0,
               color: Colors.white,
+              letterSpacing: 1.2,
             ),
           ),
         ),
