@@ -48,17 +48,30 @@ class _SupplierListState extends State<SupplierList> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Text(
-                'Fournisseurs',
-                style: TextStyle(
-                  fontFamily: 'Fredoka',
-                  fontSize: 38.0,
-                  letterSpacing: 1.2,
-                  fontWeight: FontWeight.w600,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text(
+                    'Fournisseurs',
+                    style: TextStyle(
+                      fontFamily: 'Fredoka',
+                      fontSize: 38.0,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-              ),
+                IconButton(
+                  onPressed: () async {
+                    BlocProvider.of<SuppliersBloc>(context)
+                      ..add(LoadSuppliers(
+                          _suppliers.fromEntreprise, _suppliers.entreprise));
+                  },
+                  icon: Icon(Icons.refresh),
+                ),
+              ],
             ),
             SizedBox(
               height: 20.0,

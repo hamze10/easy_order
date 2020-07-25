@@ -29,9 +29,26 @@ Widget _leftWidget(GlobalKey<ScaffoldState> key) => Padding(
         onTap: () {
           key.currentState.openDrawer();
         },
-        child: CircleAvatar(
-          backgroundImage: AssetImage('images/unknown_supplier.png'),
-          backgroundColor: Colors.grey[100],
+        child: Row(
+          children: <Widget>[
+            CircleAvatar(
+              backgroundImage: AssetImage('images/unknown_supplier.png'),
+              backgroundColor: Colors.grey[100],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                (DateTime.now().hour + 1 > 18 ||
+                        (DateTime.now().hour + 1 >= 0 &&
+                            DateTime.now().hour + 1 <= 5))
+                    ? 'Bonsoir !'
+                    : 'Bonjour !',
+                style: TextStyle(
+                  fontWeight: FontWeight.w200,
+                ),
+              ),
+            )
+          ],
         ),
       ),
     );

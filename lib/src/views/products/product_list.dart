@@ -154,27 +154,43 @@ class _ProductListState extends State<ProductList> {
             return _onBackPressed(context);
           }
         },
-        child: RefreshIndicator(
-          onRefresh: () async {
-            BlocProvider.of<ProductsBloc>(context)
-              ..add(LoadProducts(_products.fromSupplier, _products.supplier));
-          },
-          child: Stack(
-            children: <Widget>[
-              Column(
+        child: Stack(
+          children: <Widget>[
+            RefreshIndicator(
+              onRefresh: () async {
+                BlocProvider.of<ProductsBloc>(context)
+                  ..add(
+                      LoadProducts(_products.fromSupplier, _products.supplier));
+              },
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0),
-                    child: Text(
-                      'Produits',
-                      style: TextStyle(
-                        fontFamily: 'Fredoka',
-                        fontSize: 38.0,
-                        letterSpacing: 1.2,
-                        fontWeight: FontWeight.w600,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 16.0),
+                        child: Text(
+                          'Produits',
+                          style: TextStyle(
+                            fontFamily: 'Fredoka',
+                            fontSize: 38.0,
+                            letterSpacing: 1.2,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
-                    ),
+                      IconButton(
+                        onPressed: () async {
+                          BlocProvider.of<ProductsBloc>(context)
+                            ..add(
+                              LoadProducts(
+                                  _products.fromSupplier, _products.supplier),
+                            );
+                        },
+                        icon: Icon(Icons.refresh),
+                      ),
+                    ],
                   ),
                   SizedBox(
                     height: 20.0,
@@ -236,29 +252,29 @@ class _ProductListState extends State<ProductList> {
                   ),
                 ],
               ),
-              SlidingUpPanel(
-                backdropEnabled: true,
-                backdropOpacity: 0.54,
-                onPanelClosed: () {
-                  setState(() {
-                    _isOpen = !_isOpen;
-                  });
-                },
-                onPanelOpened: () {
-                  setState(() {
-                    _isOpen = !_isOpen;
-                  });
-                },
-                minHeight: 0,
-                controller: _pc,
-                panel: OrderPanel(myOrders, removeToCart),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(24.0),
-                  topRight: Radius.circular(24.0),
-                ),
+            ),
+            SlidingUpPanel(
+              backdropEnabled: true,
+              backdropOpacity: 0.54,
+              onPanelClosed: () {
+                setState(() {
+                  _isOpen = !_isOpen;
+                });
+              },
+              onPanelOpened: () {
+                setState(() {
+                  _isOpen = !_isOpen;
+                });
+              },
+              minHeight: 0,
+              controller: _pc,
+              panel: OrderPanel(myOrders, removeToCart),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(24.0),
+                topRight: Radius.circular(24.0),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: SpeedDial(

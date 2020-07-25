@@ -154,158 +154,154 @@ class _LoginFormState extends State<LoginForm> {
                     children: <Widget>[
                       Expanded(
                         child: Image.asset(
-                          'images/logo.png',
+                          'images/logo_round.png',
                           width: 200.0,
                         ),
                       ),
                       Expanded(
                         flex: 2,
-                        child: Column(
-                          children: <Widget>[
-                            TextFormField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                labelText: 'EMAIL',
-                                labelStyle: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                errorStyle: TextStyle(
-                                  color: Colors.red[900],
-                                ),
-                                focusedErrorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.red[900],
-                                  ),
-                                ),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.red[900],
-                                  ),
-                                ),
-                                suffixIcon: Icon(
-                                  Icons.email,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              keyboardType: TextInputType.emailAddress,
-                              autovalidate: true,
-                              autocorrect: false,
-                              validator: (_) {
-                                return !state.isEmailValid
-                                    ? 'Veuillez entrez un email valide.'
-                                    : null;
-                              },
-                              style: TextStyle(
-                                color: Colors.red[300],
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            TextFormField(
-                              controller: _passwordController,
-                              decoration: InputDecoration(
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                labelText: 'MOT DE PASSE',
-                                labelStyle: TextStyle(
-                                  color: Colors.black,
-                                ),
-                                errorStyle: TextStyle(
-                                  color: Colors.red[900],
-                                ),
-                                focusedErrorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.red[900],
-                                  ),
-                                ),
-                                errorBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: Colors.red[900],
-                                  ),
-                                ),
-                                suffixIcon: Icon(
-                                  Icons.lock,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              keyboardType: TextInputType.visiblePassword,
-                              autovalidate: true,
-                              autocorrect: false,
-                              validator: (_) {
-                                return !state.isPasswordValid
-                                    ? 'Veuillez entrer un mot de passe.'
-                                    : null;
-                              },
-                              style: TextStyle(
-                                color: Colors.red[300],
-                                fontWeight: FontWeight.w600,
-                              ),
-                              obscureText: true,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 10.0,
-                                bottom: 10.0,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: ListView(
+                            children: <Widget>[
+                              Column(
                                 children: <Widget>[
-                                  Text(
-                                    'Mot de passe oublié ?',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 13.0,
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
-                              child: LoginButton(
-                                onPressed: isLoginButtonEnabled(state)
-                                    ? _onFormSubmitted
-                                    : null,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 10.0),
-                              child: GoogleLoginButton(),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 20.0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    'Pas de compte ? ',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 12.0,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: _showMyDialog,
-                                    child: Text(
-                                      'créer un nouveau compte.',
+                                    child: TextFormField(
+                                      controller: _emailController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'EMAIL',
+                                        labelStyle: TextStyle(
+                                          color: Colors.grey[600],
+                                        ),
+                                        errorStyle: TextStyle(
+                                          color: Colors.red[900],
+                                        ),
+                                        prefixIcon: Icon(
+                                          Icons.email,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      keyboardType: TextInputType.emailAddress,
+                                      autovalidate: true,
+                                      autocorrect: false,
+                                      validator: (_) {
+                                        return !state.isEmailValid
+                                            ? 'Veuillez entrez un email valide.'
+                                            : null;
+                                      },
                                       style: TextStyle(
-                                        color: Colors.orange[400],
-                                        fontWeight: FontWeight.bold,
+                                        color: Colors.red[300],
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
+                                  Card(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10.0),
+                                      ),
+                                    ),
+                                    child: TextFormField(
+                                      controller: _passwordController,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        labelText: 'MOT DE PASSE',
+                                        labelStyle: TextStyle(
+                                          color: Colors.grey[600],
+                                        ),
+                                        errorStyle: TextStyle(
+                                          color: Colors.red[900],
+                                        ),
+                                        prefixIcon: Icon(
+                                          Icons.lock,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      keyboardType:
+                                          TextInputType.visiblePassword,
+                                      autovalidate: true,
+                                      autocorrect: false,
+                                      validator: (_) {
+                                        return !state.isPasswordValid
+                                            ? 'Veuillez entrer un mot de passe valide.'
+                                            : null;
+                                      },
+                                      style: TextStyle(
+                                        color: Colors.red[300],
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                      obscureText: true,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 10.0,
+                                      bottom: 10.0,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: <Widget>[
+                                        Text(
+                                          'Mot de passe oublié ?',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 13.0,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: LoginButton(
+                                      onPressed: isLoginButtonEnabled(state)
+                                          ? _onFormSubmitted
+                                          : null,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10.0),
+                                    child: GoogleLoginButton(),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 20.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(
+                                          'Pas de compte ? ',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 12.0,
+                                            fontWeight: FontWeight.w400,
+                                          ),
+                                        ),
+                                        GestureDetector(
+                                          onTap: _showMyDialog,
+                                          child: Text(
+                                            'créer un nouveau compte.',
+                                            style: TextStyle(
+                                              color: Colors.orange[200],
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       Padding(

@@ -21,7 +21,13 @@ class LoginScreen extends StatelessWidget {
         child: Stack(
           children: <Widget>[
             Container(
-              color: Colors.grey[100],
+              decoration: BoxDecoration(
+                color: Colors.teal,
+                /*image: DecorationImage(
+                  fit: BoxFit.fill,
+                  image: AssetImage('images/texture.jpg'),
+                ),*/
+              ),
             ),
             LoginForm(
               userRepository: _userRepository,
