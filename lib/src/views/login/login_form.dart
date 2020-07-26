@@ -153,9 +153,39 @@ class _LoginFormState extends State<LoginForm> {
                   child: Column(
                     children: <Widget>[
                       Expanded(
-                        child: Image.asset(
-                          'images/logo_round.png',
-                          width: 200.0,
+                        child: Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16.0),
+                              child: Image.asset(
+                                'images/logo_round.png',
+                                width: 150.0,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    'PR',
+                                    style: TextStyle(
+                                      fontFamily: 'Fredoka',
+                                      fontSize: 34.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    'ORDER',
+                                    style: TextStyle(
+                                      fontFamily: 'Fredoka',
+                                      fontSize: 34.0,
+                                      color: Colors.red[600],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Expanded(
