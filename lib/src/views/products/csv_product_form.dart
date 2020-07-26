@@ -57,8 +57,7 @@ class _CSVProductFormState extends State<CSVProductForm> {
     try {
       _pathFile = null;
       _pathFile = await FilePicker.getFilePath(
-        type: FileType.custom,
-        allowedExtensions: ['csv', 'text/csv'],
+        type: FileType.any,
       );
     } on PlatformException catch (e) {
       print('ERROR _openFileExplorer : $e');
@@ -229,7 +228,9 @@ class _CSVProductFormState extends State<CSVProductForm> {
                   ),
                   GestureDetector(
                     onTap: () async {
-                      if (_pathFile == null || _pathFile.isEmpty) {
+                      if (_pathFile == null ||
+                          _pathFile.isEmpty ||
+                          !_pathFile.endsWith('csv')) {
                         _snackbarError(context);
                       } else {
                         final input = File(_pathFile).openRead();
