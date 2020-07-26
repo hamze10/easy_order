@@ -1,3 +1,7 @@
+import 'dart:ffi';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:badges/badges.dart';
 import 'package:easy_order/src/blocs/products_bloc/products_bloc.dart';
 import 'package:easy_order/src/models/order.dart';
@@ -10,6 +14,8 @@ import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import '../customAppBar.dart';
 
@@ -649,4 +655,27 @@ class _OrderPanelState extends State<OrderPanel> {
       ),
     );
   }
+}
+
+Uint8List _generatePDF(List<Order> orders) {
+  final pw.Document doc =
+      pw.Document(title: 'Commande de ${orders.first.entreprise.name}');
+
+  doc.addPage(pw.Page(build: (pw.Context context) {
+    return pw.Row(
+      children: <pw.Widget>[
+        pw.Expanded(
+            child: pw.ListView.separated(
+          separatorBuilder: (context, i) => pw.Divider(),
+          itemCount: orders.length,
+          itemBuilder: (context, i) {
+            return pw.Text(
+              orders[i].toSend(),
+            );
+          },
+        )),
+      ],
+    );
+  }));
+  return doc.save();
 }

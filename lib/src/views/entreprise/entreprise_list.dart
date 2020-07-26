@@ -153,10 +153,7 @@ class _EntrepriseListState extends State<EntrepriseList> {
                               fromSupplier: null,
                               product: null,
                               quantity: -1,
-                            ), /*SupplierArguments(
-                              _entreprises[i].suppliers,
-                              _entreprises[i],
-                            ),*/
+                            ),
                           );
                         },
                         child: Card(

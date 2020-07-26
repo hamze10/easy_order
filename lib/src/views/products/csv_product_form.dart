@@ -58,7 +58,7 @@ class _CSVProductFormState extends State<CSVProductForm> {
       _pathFile = null;
       _pathFile = await FilePicker.getFilePath(
         type: FileType.custom,
-        allowedExtensions: ['csv'],
+        allowedExtensions: ['csv', 'text/csv'],
       );
     } on PlatformException catch (e) {
       print('ERROR _openFileExplorer : $e');

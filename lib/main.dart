@@ -16,6 +16,7 @@ import 'package:easy_order/src/views/splash_screen.dart';
 import 'package:easy_order/src/repositories/repositories.dart';
 import 'package:easy_order/src/views/suppliers/manage_supplier_screen.dart';
 import 'package:easy_order/src/views/suppliers/supplier_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
