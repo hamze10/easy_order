@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name=".Application"
-        android:label="easy_order"
+        android:label="Prorder"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -51,4 +51,5 @@
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

@@ -57,7 +57,22 @@ class FirebaseProductRepository implements ProductRepository {
   Future<void> addMultipleProduct(
       List<Product> products, Supplier supplier) async {
     for (Product product in products) {
-      await this.addProduct(product, supplier);
+      //Check if product already exists (check by name) and update it
+      QuerySnapshot snap = await this.productCollection.getDocuments();
+      List<DocumentSnapshot> doc = snap.documents;
+      String id;
+      try {
+        id = doc
+            .where((element) => element.data['name'] == product.name)
+            .single
+            .documentID;
+      } catch (e) {}
+      if (id != null) {
+        Product updated = product.copyWith(id: id);
+        await this.updateProduct(updated);
+      } else {
+        await this.addProduct(product, supplier);
+      }
     }
   }
 
