@@ -1,4 +1,4 @@
-package com.example.easy_order
+package com.abcdev.prorder
 
 import io.flutter.app.FlutterApplication
 import io.flutter.plugin.common.PluginRegistry

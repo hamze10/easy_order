@@ -1,4 +1,4 @@
-package com.example.easy_order
+package com.abcdev.prorder
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

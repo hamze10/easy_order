@@ -1,5 +1,3 @@
-import 'dart:ffi';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:badges/badges.dart';
@@ -14,7 +12,6 @@ import 'package:flutter_open_whatsapp/flutter_open_whatsapp.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../customAppBar.dart';

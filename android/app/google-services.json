@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:187585347498:android:e1d8ea43087fc263a0f5d3",
+        "mobilesdk_app_id": "1:187585347498:android:8f89ce8cb05da165a0f5d3",
         "android_client_info": {
-          "package_name": "com.example.easy_order"
+          "package_name": "com.abcdev.prorder"
         }
       },
       "oauth_client": [
